@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE experiment>
+<experiment iterations="1">
+  <setup>
+    <constraint>pontipine</constraint>
+    <docker path="/dist/pynguin-0.19.0.tar" name="localhost/pynguin-0.19.0" version="0.19.0"/>
+    <dockerflapy path="/dist/flapy_image.tar" name="localhost/flapy" version=""/>
+    <configurations>
+      <global>
+        <option key="guess_unknown_types" value="True"/>
+        <option key="constant_seeding" value="True"/>
+        <option key="seeded_primitives_reuse_probability" value="0.2"/>
+        <option key="dynamic_constant_seeding" value="True"/>
+        <option key="seeded_dynamic_values_reuse_probability" value="0.6"/>
+        <option key="maximum_search_time" value="600"/>
+      </global>
+      <configuration id="DynaMOSA-TypeHints">
+        <option key="algorithm" value="DYNAMOSA"/>
+        <option key="type_inference_strategy" value="TYPE_HINTS"/>
+      </configuration>
+      <flapy>
+        <option key="tests_to_be_run" value=''></option>
+        <option key="funcs_to_trace" value=''></option>
+        <option key="num_runs" value="150"></option>
+        <option key="third_party_converage" value="false"></option>
+        <option key="plus_random_runs" value="false"></option>
+      </flapy>
+    </configurations>
+    <output-variables>
+      <output-variable>Coverage</output-variable>
+    </output-variables>
+  </setup>
+  <projects>
+    <project>
+      <name>gamble</name>
+      <version>0.10</version>
+      <repository>https://github.com/jpetrucciani/gamble</repository>
+      <description>gamble is a simple library that implements a collection of some common gambling-related classes</description>
+      <sources>src/projects/gamble</sources>
+      <modules>
+        <module>gamble.models.cards</module>
+      </modules>
+    </project>
+  </projects>
+</experiment>
