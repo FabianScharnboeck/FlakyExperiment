@@ -528,7 +528,7 @@ def main(argv: List[str]) -> None:
     for run in runs:
        # _write_simple_script(run)
         write_csv(run)
-    merger.merge_csv(merge_path, "*")
+    merger.merge_csv(merge_path, "pynguin_run_*")
     #    _write_run_script(run)
     # _write_array_job_script(slurm_setup.constraint, len(runs))
 

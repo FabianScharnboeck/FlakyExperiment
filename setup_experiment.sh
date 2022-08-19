@@ -2,7 +2,7 @@
 
 GIT_MODULE_PATH=./.git/modules
 PROJECTS_PATH=./src/projects
-REPOSITORY_PATH=./csv/repos.csv
+REPOSITORY_PATH=./csv/python_top_200.csv
 SETUP_TOOLS_PATH=./setup_tools
 
 function echo_blue {

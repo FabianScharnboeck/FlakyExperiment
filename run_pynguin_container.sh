@@ -105,7 +105,7 @@ fi
 
 download_dependencies
 
-python "${BASE_PATH}"/setup_tools/create_flapy_csv.py --name "${PROJECT_NAME}" --url "${INPUT_DIR_PHYSICAL}" --hash "${PROJ_HASH}" --pypi-tag "${PYPI_TAG}" --funcs_to_trace "" --tests "${TESTS_TO_BE_RUN}" --runs "${NUM_RUNS}" --run_id "${SEED}"
+#python "${BASE_PATH}"/setup_tools/create_flapy_csv.py --name "${PROJECT_NAME}" --url "${INPUT_DIR_PHYSICAL}" --hash "${PROJ_HASH}" --pypi-tag "${PYPI_TAG}" --funcs_to_trace "" --tests "${TESTS_TO_BE_RUN}" --runs "${NUM_RUNS}" --run_id "${SEED}"
 
 
 IFS=' ' read -ra ELEMENTS <<< "${PROJ_MODULES}"

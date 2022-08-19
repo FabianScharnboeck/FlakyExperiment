@@ -8,8 +8,8 @@ import sys
 from pathlib import Path
 import tag_matcher
 
-base_path = base_path = Path(".").absolute()
-csv_output_name = "repositories_flakiness_big.csv"
+base_path = Path(".").absolute()
+csv_output_name = "repositories_python_top_200.csv"
 
 
 @dataclasses.dataclass

@@ -6,6 +6,7 @@ import sys
 import pandas as pd
 from pathlib import Path
 from typing import List
+from datetime import datetime
 
 
 def merge_csv(path: Path, name: str) -> None:
@@ -24,7 +25,9 @@ def merge_csv(path: Path, name: str) -> None:
     df = pd.concat(map(pd.read_csv, files), ignore_index=True).drop_duplicates()
 
     """Write the merged CSV dataframe into a combined CSV file"""
-    csv_file = Path(str(path) + "/merged.csv")
+    now = datetime.now()
+    timestamp = now.strftime("%m_%d_%Y")
+    csv_file = Path(str(path) + "/merged_"+timestamp+".csv")
     df.to_csv(path_or_buf=csv_file, index=False)
 
 
