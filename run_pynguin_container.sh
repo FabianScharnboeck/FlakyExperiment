@@ -1,7 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=pynguin
-#SBATCH --time=24:00:00
-#SBATCH --mem=8GB
+
+# -- CHECK IF ENVIRONMENT VARIABLES ARE DEFINED
+if [ -z ${LOCAL_PODMAN_ROOT+x} ]; then
+    echo "LOCAL_PODMAN_ROOT not set, exiting"
+    exit
+fi
+if [ -z ${PODMAN_HOME+x} ]; then
+    echo "PODMAN_HOME not set, exiting"
+    exit
+fi
 
 DEBUG=1
 function debug_echo {
@@ -104,9 +111,6 @@ fi
 
 
 download_dependencies
-
-#python "${BASE_PATH}"/setup_tools/create_flapy_csv.py --name "${PROJECT_NAME}" --url "${INPUT_DIR_PHYSICAL}" --hash "${PROJ_HASH}" --pypi-tag "${PYPI_TAG}" --funcs_to_trace "" --tests "${TESTS_TO_BE_RUN}" --runs "${NUM_RUNS}" --run_id "${SEED}"
-
 
 IFS=' ' read -ra ELEMENTS <<< "${PROJ_MODULES}"
 for MODULE in "${ELEMENTS[@]}"; do
