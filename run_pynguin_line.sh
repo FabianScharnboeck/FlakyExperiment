@@ -25,7 +25,7 @@ echo "-- $0"
 echo "    input csv file:      $PYNGUIN_CSV_FILE"
 echo "    meta file:           $PYNGUIN_META_FILE"
 echo "    slurm array task id: $SLURM_ARRAY_TASK_ID"
-echo "    input csv line num:  $PYNGUIN_INPUT_CSV_LINE_NUM"
+echo "    input csv line num:  $LINE_NUM"
 
 function sighdl {
   kill -INT "${srunPid}" || true
@@ -33,6 +33,7 @@ function sighdl {
 
 # -- READ CSV LINE
 csv_line=$(sed "${LINE_NUM}q;d" "${PYNGUIN_CSV_FILE}")
+echo "	$csv_line" >> ${PYNGUIN_META_FILE}
 
 # -- PARSE CSV LINE
 IFS=, read -r INPUT_DIR_PHYSICAL OUTPUT_DIR_PHYSICAL PACKAGE_DIR_PHYSICAL BASE_PATH PROJ_NAME PROJ_SOURCES \
@@ -74,7 +75,22 @@ if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
         --error="$PYNGUIN_SLURM_OUTPUT_DIR/log.out" \
         -- \
         ./run_pynguin_container.sh \
-            "TODO" \
+            "${PYNGUIN_RUN_ON}" \
+	    "${BASE_PATH}" \
+	    "${INPUT_DIR_PHYSICAL}" \
+	    "${OUTPUT_DIR_PHYSICAL}" \
+	    "${PACKAGE_DIR_PHYSICAL}" \
+	    "${PROJ_NAME}" \
+	    "${PROJ_SOURCES}" \
+	    "${PROJ_MODULES}" \
+	    "${PROJ_HASH}" \
+	    "${PYPI_TAG}" \
+	    "${CONFIG_NAME}" \
+	    "${CONFIGURATION_OPTIONS}" \
+	    "${SEED}" \
+	    "${TESTS_TO_BE_RUN}" \
+	    "${NUM_FLAPY_RUNS}" \
+	    "${FUNCS_TO_TRACE}" \
         & srunPid=$!
 elif [[ ${PYNGUIN_RUN_ON} = "local" ]]; then
     ./run_pynguin_container.sh \

@@ -11,15 +11,15 @@ RUN_ON="${1}"
 CSV_FILE="${2}"
 CONSTRAINT="${3}"
 
-dos2unix "${CSV_FILE}"
-
 # -- CREATE LOG DIR
 if [[ $RUN_ON = "cluster" ]]
-DATE_TIME=$(date +%Y%m%d_%H%M%S)
-then SLURM_OUTPUT_DIR=$(mktemp -d $(pwd)/src/results/pynguin_slurm_log/slurm_log_"$DATE_TIME"_XXXX)
+DATE_TIME=$(date +%Y_%m_%d__%H_%M_%S)
+then SLURM_OUTPUT_DIR=$(pwd)/src/results/pynguin_slurm_log/slurm_log_"$DATE_TIME"
+mkdir -p ${SLURM_OUTPUT_DIR}
 cp "${0}" "${SLURM_OUTPUT_DIR}"
-cp "${2}" "${SLURM_OUTPUT_DIR}/input.csv"
+cp "${CSV_FILE}" "${SLURM_OUTPUT_DIR}/input.csv"
 PYNGUIN_META_FILE="${SLURM_OUTPUT_DIR}/pynguin_run.yaml"
+touch ${PYNGUIN_META_FILE}
 fi
 
 # -- EXPORT VARIABLES
@@ -30,11 +30,10 @@ export PYNGUIN_META_FILE="${PYNGUIN_META_FILE}"
 
 # -- SBATCH LOG FILES
 SBATCH_LOG_FOLDER="$SLURM_OUTPUT_DIR/sbatch_logs/"
-mkdir -p "$SBATCH_LOG_FOLDER"
+mkdir -p -m 777 "$SBATCH_LOG_FOLDER"
 SBATCH_LOG_FILE_PATTERN="$SBATCH_LOG_FOLDER/log-%a.out"
 
-# -- INPUT PRE-PROCESSING
-dos2unix "${CSV_FILE}"
+# -- INPUT PRE-PROCESSING"
 CSV_FILE_LENGTH=$(wc -l < "$CSV_FILE")
 debug_echo "    CSV file length:   $CSV_FILE_LENGTH"
 
