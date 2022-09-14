@@ -33,7 +33,7 @@ function sighdl {
 
 # -- READ CSV LINE
 csv_line=$(sed "${LINE_NUM}q;d" "${PYNGUIN_CSV_FILE}")
-echo "	$csv_line" >> ${PYNGUIN_META_FILE}
+echo "csv_line:   ${csv_line}" >> "${PYNGUIN_META_FILE}"
 
 # -- PARSE CSV LINE
 IFS=, read -r INPUT_DIR_PHYSICAL OUTPUT_DIR_PHYSICAL PACKAGE_DIR_PHYSICAL BASE_PATH PROJ_NAME PROJ_SOURCES \
@@ -42,22 +42,22 @@ IFS=, read -r INPUT_DIR_PHYSICAL OUTPUT_DIR_PHYSICAL PACKAGE_DIR_PHYSICAL BASE_P
 
 # -- DEBUG OUTPUT
 echo "    ----"
-echo "    input directory:        $INPUT_DIR_PHYSICAL"
-echo "    output directory:       $OUTPUT_DIR_PHYSICAL"
-echo "    package directory:      $PACKAGE_DIR_PHYSICAL"
-echo "    base path:              $BASE_PATH"
-echo "    configuration name:     $CONFIG_NAME"
-echo "    configuration options:  $CONFIGURATION_OPTIONS"
-echo "    project name:           $PROJ_NAME"
-echo "    project url:            $PROJ_SOURCES"
-echo "    project git hash:       $PROJ_HASH"
-echo "    project pypi tag:       $PYPI_TAG"
-echo "    project modules:        $PROJ_MODULES"
-echo "    project seed:           $SEED"
+echo "    input directory:        ${INPUT_DIR_PHYSICAL}"
+echo "    output directory:       ${OUTPUT_DIR_PHYSICAL}"
+echo "    package directory:      ${PACKAGE_DIR_PHYSICAL}"
+echo "    base path:              ${BASE_PATH}"
+echo "    configuration name:     ${CONFIG_NAME}"
+echo "    configuration options:  ${CONFIGURATION_OPTIONS}"
+echo "    project name:           ${PROJ_NAME}"
+echo "    project url:            ${PROJ_SOURCES}"
+echo "    project git hash:       ${PROJ_HASH}"
+echo "    project pypi tag:       ${PYPI_TAG}"
+echo "    project modules:        ${PROJ_MODULES}"
+echo "    project seed:           ${SEED}"
 
-echo "    tests to be run:        $TESTS_TO_BE_RUN"
-echo "    funcs to trace:         $FUNCS_TO_TRACE"
-echo "    number flapy runs:      $NUM_FLAPY_RUNS"
+echo "    tests to be run:        ${TESTS_TO_BE_RUN}"
+echo "    funcs to trace:         ${FUNCS_TO_TRACE}"
+echo "    number flapy runs:      ${NUM_FLAPY_RUNS}"
 
 # -- LOG
 {
