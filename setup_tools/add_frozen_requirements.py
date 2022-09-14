@@ -20,8 +20,13 @@ def merge(path, destination):
     print(right['PROJ_HASH'])
     print(merged["frozen_requirements"])
 
+    # Rearrange columns as frozen_reqs is first
+    cols = merged.columns.tolist()
+    cols = cols[1:] + cols[:1]
+    merged_new = merged[cols]
+
     destination_new: str = destination[:-4] + "_frozen_req" + destination[-4:]
-    merged.to_csv(destination_new, index=False)
+    merged_new.to_csv(destination_new, index=False)
 
 
 if __name__ == "__main__":
