@@ -35,18 +35,16 @@ PROJ_SOURCES="${7}"
 PROJ_MODULES="${8}"
 PROJ_HASH="${9}"
 PYPI_TAG="${10}"
-CONFIGURATION_NAME="${11}"
-CONFIGURATION_OPTIONS="${12}"
-SEED="${13}"
-
-# -- FLAPY RELATED ARGS
-TESTS_TO_BE_RUN="${14}"
-NUM_RUNS="${15}"
-FUNCS_TO_TRACE="${16}"
+FROZEN_REQUIREMENTS="${11}"
+CONFIGURATION_NAME="${12}"
+CONFIGURATION_OPTIONS="${13}"
+SEED="${14}"
 
 function download_dependencies {
   mkdir -p "${PACKAGE_DIR_PHYSICAL}"
+  if [[ "${PYPI_TAG}" = "" ]]; then
     tag=${PYPI_TAG}
+    echo_blue "Dependency option: PYPI_TAG"
     echo_blue "Writing dependency into requirements file..."
     if [ -z "${tag}" ]
     then echo "${PROJECT_NAME}" > "${PACKAGE_DIR_PHYSICAL}"/package.txt
@@ -54,6 +52,19 @@ function download_dependencies {
     echo "${PROJECT_NAME}==${tag}" > "${PACKAGE_DIR_PHYSICAL}"/package.txt
     fi
     echo_blue "Dependencies written to requirements file..."
+  else
+    echo_blue "Dependency option: FROZEN_REQUIREMENTS"
+    if [ -z "${FROZEN_REQUIREMENTS}" ]
+      then echo "Error. FROZEN_REQUIREMENTS was empty."
+      exit 1
+    else
+      echo_blue "Writing dependency into requirements file..."
+      echo "${FROZEN_REQUIREMENTS}" > "${PACKAGE_DIR_PHYSICAL}"package.txt
+      echo_blue "Done. REQU. are:
+      ${FROZEN_REQUIREMENTS}"
+    fi
+  fi
+
 }
 
 function clone_project {
@@ -81,11 +92,6 @@ echo "-- $0 (run_container.sh)"
         debug_echo "    PROJECT GIT HASH:       $PROJ_HASH"
         debug_echo "    PROJECT PYPI TAG:       $PYPI_TAG"
         debug_echo "    PROJECT MODULES:        $PROJ_MODULES"
-        debug_echo "    -- FLAPY RELATED ARGUMENTS --"
-        debug_echo "    TESTS_TO_BE_RUN:        $TESTS_TO_BE_RUN"
-        debug_echo "    NUM_RUNS:               $NUM_RUNS"
-        debug_echo "    PLUS_RANDOM_RUNS:       $PLUS_RANDOM_RUNS"
-        debug_echo "    THIRD_PARTY_COVERAGE:   $THIRD_PARTY_COVERAGE"
 
 clone_project
 
@@ -102,11 +108,22 @@ alias p='podman --root=$LOCAL_PODMAN_ROOT'
 # -- INITIALIZE META FILE
 if [[ "${RUN_ON=}" = "cluster" ]]
 then
-  META_FILE="$INPUT_DIR_PHYSICAL/pynguin-result.yaml"
+  META_FILE="$INPUT_DIR_PHYSICAL/!pynguin_log.yaml"
   touch "$META_FILE"
 
   # -- LOG HOSTNAME
   echo "hostname:               $(cat /etc/hostname)"     >> "$META_FILE"
+  echo "-- PYNGUIN RELATED ARGUMENTS --"                  >> "$META_FILE"
+  echo "INPUT DIRECTORY:        $INPUT_DIR_PHYSICAL"      >> "$META_FILE"
+  echo "OUTPUT DIRECTORY:       $OUTPUT_DIR_PHYSICAL"     >> "$META_FILE"
+  echo "PACKAGE DIRECTORY:      $PACKAGE_DIR_PHYSICAL"    >> "$META_FILE"
+  echo "BASE PATH:              $BASE_PATH"               >> "$META_FILE"
+  echo "CONFIGURATION NAME:     $CONFIGURATION_NAME"      >> "$META_FILE"
+  echo "CONFIGURATION OPTIONS:  $CONFIGURATION_OPTIONS"   >> "$META_FILE"
+  echo "PROJECT NAME:           $PROJ_NAME"               >> "$META_FILE"
+  echo "PROJECT GIT HASH:       $PROJ_HASH"               >> "$META_FILE"
+  echo "PROJECT PYPI TAG:       $PYPI_TAG"                >> "$META_FILE"
+  echo "PROJECT MODULES:        $PROJ_MODULES"            >> "$META_FILE"
 fi
 
 

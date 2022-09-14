@@ -38,7 +38,7 @@ echo "csv_line:   ${csv_line}" >> "${PYNGUIN_META_FILE}"
 # -- PARSE CSV LINE
 IFS=, read -r INPUT_DIR_PHYSICAL OUTPUT_DIR_PHYSICAL PACKAGE_DIR_PHYSICAL BASE_PATH PROJ_NAME PROJ_SOURCES \
     PROJ_HASH PYPI_TAG PROJ_MODULES CONFIG_NAME CONFIGURATION_OPTIONS TESTS_TO_BE_RUN FUNCS_TO_TRACE \
-    THIRD_PARTY_COVERAGE NUM_FLAPY_RUNS SEED <<< "${csv_line}"
+    THIRD_PARTY_COVERAGE NUM_FLAPY_RUNS SEED frozen_requirements <<< "${csv_line}"
 
 # -- DEBUG OUTPUT
 echo "    ----"
@@ -53,11 +53,8 @@ echo "    project url:            ${PROJ_SOURCES}"
 echo "    project git hash:       ${PROJ_HASH}"
 echo "    project pypi tag:       ${PYPI_TAG}"
 echo "    project modules:        ${PROJ_MODULES}"
+echo "    project requirements:   ${frozen_requirements}"
 echo "    project seed:           ${SEED}"
-
-echo "    tests to be run:        ${TESTS_TO_BE_RUN}"
-echo "    funcs to trace:         ${FUNCS_TO_TRACE}"
-echo "    number flapy runs:      ${NUM_FLAPY_RUNS}"
 
 # -- LOG
 {
@@ -85,12 +82,10 @@ if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
 	    "${PROJ_MODULES}" \
 	    "${PROJ_HASH}" \
 	    "${PYPI_TAG}" \
+	    "${frozen_requirements}" \
 	    "${CONFIG_NAME}" \
 	    "${CONFIGURATION_OPTIONS}" \
 	    "${SEED}" \
-	    "${TESTS_TO_BE_RUN}" \
-	    "${NUM_FLAPY_RUNS}" \
-	    "${FUNCS_TO_TRACE}" \
         & srunPid=$!
 elif [[ ${PYNGUIN_RUN_ON} = "local" ]]; then
     ./run_pynguin_container.sh \
