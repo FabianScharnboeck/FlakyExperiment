@@ -42,7 +42,7 @@ SEED="${14}"
 
 function download_dependencies {
   mkdir -p "${PACKAGE_DIR_PHYSICAL}"
-  if [[ "${PYPI_TAG}" = "" ]]; then
+  if [[ "${PYPI_TAG}" -ne "" ]]; then
     tag=${PYPI_TAG}
     echo_blue "Dependency option: PYPI_TAG"
     echo_blue "Writing dependency into requirements file..."
@@ -61,9 +61,8 @@ function download_dependencies {
       echo_blue "Writing dependency into requirements file..."
       IFS=' ' read -ra ELEMENTS <<< "${FROZEN_REQUIREMENTS}"
       for REQ in "${ELEMENTS[@]}"; do
-        printf "%s\n" "${REQ}" >> "${PACKAGE_DIR_PHYSICAL}"package.txt
-        echo_blue "Done. REQU. are:
-        ${FROZEN_REQUIREMENTS}"
+	echo "Printing ${REQ} into ${PACKAGE_DIR_PHYSICAL}"
+        printf "%s\n" "${REQ}" >> "${PACKAGE_DIR_PHYSICAL}"/package.txt
       done
     fi
   fi
@@ -74,10 +73,10 @@ function clone_project {
   echo_blue "Adding project into destination folder"
   git clone "${PROJ_SOURCES}" "${INPUT_DIR_PHYSICAL}"
   cd "${INPUT_DIR_PHYSICAL}"
-  mkdir -p "${TESTS_TO_BE_RUN}"
-  if [ -n "${HASH}" ]
-  then git reset --hard "${HASH}"
-  echo_blue "Resetting to hash: ${HASH}"
+  mkdir -p "${OUTPUT_DIR_PHYSICAL}"
+  if [ -n "${PROJ_HASH}" ]
+  then git reset --hard "${PROJ_HASH}"
+  echo_blue "Resetting to hash: ${PROJ_HASH}"
   fi
   cd "${BASE_PATH}"
 }
@@ -91,7 +90,7 @@ echo "-- $0 (run_container.sh)"
         debug_echo "    BASE PATH:              $BASE_PATH"
         debug_echo "    CONFIGURATION NAME:     $CONFIGURATION_NAME"
         debug_echo "    CONFIGURATION OPTIONS:  $CONFIGURATION_OPTIONS"
-        debug_echo "    PROJECT NAME:           $PROJ_NAME"
+        debug_echo "    PROJECT NAME:           $PROJECT_NAME"
         debug_echo "    PROJECT GIT HASH:       $PROJ_HASH"
         debug_echo "    PROJECT PYPI TAG:       $PYPI_TAG"
         debug_echo "    PROJECT MODULES:        $PROJ_MODULES"

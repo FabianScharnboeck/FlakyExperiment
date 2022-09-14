@@ -8,7 +8,6 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import List, Union, Tuple, Dict, Optional
 import csv
-import setup_tools.merge_csv as merger
 
 
 @dataclasses.dataclass
