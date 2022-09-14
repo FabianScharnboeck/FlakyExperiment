@@ -3,6 +3,7 @@
 GIT_MODULE_PATH=./.git/modules
 PROJECTS_PATH=./src/projects
 REPOSITORY_PATH=./csv/martin_frozen_requirements_2.csv
+REPOSITORY_PATH_WITH_FROZEN_REQ=./csv/martin_frozen_requirements.csv
 SETUP_TOOLS_PATH=./setup_tools
 
 MODE=${1}
@@ -70,4 +71,12 @@ do
   fi
 done
 } < <(tail -n +2 "${REPOSITORY_PATH}")
+
+PYNGUIN_OUTPUT=./src/pynguin_csv/pynguin.csv
+if [[ "${MODE}" = "FROZEN_REQ" ]]; then
+  python3 experiment.py -d exp_flakiness.xml -r "${OUTPUT}" -o "${PYNGUIN_OUTPUT}"
+  python3 ./setup_tools/add_frozen_requirements.py -p "${REPOSITORY_PATH_WITH_FROZEN_REQ}" -d "${PYNGUIN_OUTPUT}"
+elif [[ "${MODE}" = "TAG" ]]; then
+  python3 experiment.py -d exp_flakiness.xml -r "${OUTPUT}" -o "${PYNGUIN_OUTPUT}"
+fi
 
