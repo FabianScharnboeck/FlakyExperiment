@@ -59,9 +59,12 @@ function download_dependencies {
       exit 1
     else
       echo_blue "Writing dependency into requirements file..."
-      echo "${FROZEN_REQUIREMENTS}" > "${PACKAGE_DIR_PHYSICAL}"package.txt
-      echo_blue "Done. REQU. are:
-      ${FROZEN_REQUIREMENTS}"
+      IFS=' ' read -ra ELEMENTS <<< "${FROZEN_REQUIREMENTS}"
+      for REQ in "${ELEMENTS[@]}"; do
+        printf "%s\n" "${REQ}" >> "${PACKAGE_DIR_PHYSICAL}"package.txt
+        echo_blue "Done. REQU. are:
+        ${FROZEN_REQUIREMENTS}"
+      done
     fi
   fi
 

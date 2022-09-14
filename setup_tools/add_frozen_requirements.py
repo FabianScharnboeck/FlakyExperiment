@@ -15,6 +15,7 @@ def merge(path, destination):
                       right_on=["PROJ_NAME", "PROJECT_SOURCES", "PROJ_HASH"])
 
     merged = merged.drop(["Project_Name", "Project_URL", "Project_Hash"], axis=1)
+    merged["frozen_requirements"] = merged["frozen_requirements"].str.replace("\n", " ")
     print(left['Project_Hash'])
     print(right['PROJ_HASH'])
     print(merged["frozen_requirements"])
