@@ -8,6 +8,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import List, Union, Tuple, Dict, Optional
 import csv
+import setup_tools.add_frozen_requirements
+import setup_tools.create_frozen_requirements
+
+SEED: int = 4105
 
 
 @dataclasses.dataclass
@@ -44,6 +48,7 @@ class Run:
     modules: List[str]
     iteration: int
     run_id: int
+    line: int
 
 
 def _parse_xml(
@@ -55,7 +60,7 @@ def _parse_xml(
 
     setup = experiment.find("setup")
     configurations = setup.find("configurations")
-    global_config = _get_global_config(configurations.find("global"))
+    global_config, search_time = _get_global_config(configurations.find("global"))
     flapy_config = _get_flapy_config(configurations.find("flapy"))
     configs: Dict[str, List[str]] = {}
     for configuration in configurations.findall("configuration"):
@@ -76,7 +81,7 @@ def _parse_xml(
     with open(csv_file_name) as csvfile:
         reader = csv.DictReader(csvfile)
         for project in reader:
-            projects.append(_get_project(project))
+            projects.extend(_get_project(project, search_time))
 
     return slurm_setup, run_configurations, projects, flapy_config
 
@@ -105,13 +110,16 @@ def _get_slurm_setup(experiment: ET.Element) -> SLURMSetup:
 
 def _get_global_config(element: Optional[ET.Element]) -> List[str]:
     if element is None:
-        return []
+        return [], 140
     result = []
     for option in element:
+        if option.attrib["key"] == "maximum_search_time":
+            max_search_time: int = int(option.attrib["value"])
+            search_time_split: int = int((22 * 60 * 60) / max_search_time)
         result.append(
             f'--{option.attrib["key"]} {option.attrib["value"]}'
         )
-    return result
+    return result, search_time_split
 
 
 def _get_flapy_config(element: Optional[ET.Element]) -> List[str]:
@@ -135,7 +143,7 @@ def _get_configuration(configuration: ET.Element) -> Tuple[str, List[str]]:
     return name, values
 
 
-def _get_project(row) -> Project:
+def _get_project(row, search_time: int) -> List[Project]:
     name: str = row['NAME']
     sources: str = row['URL']
     version: str = "unknown"
@@ -146,17 +154,38 @@ def _get_project(row) -> Project:
     modules_str = modules_str.replace('}', '')
     modules_str = modules_str.replace('\'', '')
     modules: List[str] = []
+
+    # Split up the module if there are too many of them to be handled by SLURM.
+    count: int = 0
+    projects: List[Project] = []
     for value in modules_str.split(','):
+        count += 1
         value = value.strip()
         modules.append(value)
-    return Project(
-        name=name,
-        sources=sources,
-        version=version,
-        modules=modules,
-        project_hash=project_hash,
-        project_pypi_version=project_pypi_version
-    )
+        if count >= search_time:
+            count = 0
+            proj: Project = Project(
+                name=name,
+                sources=sources,
+                version=version,
+                modules=modules,
+                project_hash=project_hash,
+                project_pypi_version=project_pypi_version
+            )
+            modules = []
+            projects.append(proj)
+    if len(modules) != 0:
+        proj: Project = Project(
+            name=name,
+            sources=sources,
+            version=version,
+            modules=modules,
+            project_hash=project_hash,
+            project_pypi_version=project_pypi_version
+        )
+        projects.append(proj)
+
+    return projects
 
 
 def _create_runs(
@@ -184,7 +213,8 @@ def _create_runs(
                     project_pypi_version=project.project_pypi_version,
                     modules=project.modules,
                     iteration=iteration,
-                    run_id=i,
+                    run_id=SEED,
+                    line=i
                 ))
                 i += 1
     return runs
@@ -200,8 +230,8 @@ def write_csv(runs: List[Run], output: str):
         pynguin_test_dir: str = "pynguin_auto_tests_" + str(round((time.time() * 1000))) + "_" + str(
             random.randint(1000000, 9999999))
 
-        input_dir_physical = project_path / run.project_name
-        output_dir_physical = project_path / run.project_name / pynguin_test_dir
+        input_dir_physical = project_path / (run.project_name + "_" + str(run.line))
+        output_dir_physical = input_dir_physical / pynguin_test_dir
         package_dir_physical = base_path / package_path
 
         base_path = Path(".").absolute()
@@ -225,7 +255,6 @@ def write_csv(runs: List[Run], output: str):
 
 
 def main(argv: List[str]) -> None:
-    base_path = Path(".").absolute()
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-d",
@@ -248,14 +277,44 @@ def main(argv: List[str]) -> None:
         required=True,
         help="Output CSV file + path"
     )
+    parser.add_argument(
+        "-e",
+        "--frozen_requirements",
+        dest="frozen_requirements",
+        required=False,
+        help="Frozen requirements"
+    )
+    parser.add_argument(
+        "-g",
+        "--frozen_requirements_source",
+        dest="frozen_requirements_source",
+        required=False,
+        help="Frozen requirements"
+    )
+    parser.add_argument(
+        "-i",
+        "--frozen_requirements_dest",
+        dest="frozen_requirements_dest",
+        required=False,
+        help="Frozen requirements"
+    )
+
     args = parser.parse_args()
     config: str = args.definition
     repos: str = args.repositories
     output: str = args.output
+    frozen_requirements: bool = args.frozen_requirements
+    frozen_requirements_source: str = args.frozen_requirements_source
+    frozen_requirements_dest: str = args.frozen_requirements_dest
+
     slurm_setup, run_configurations, projects, flapy_config = _parse_xml(config, repos)
     runs: List[Run] = _create_runs(slurm_setup, run_configurations, projects, flapy_config)
 
     write_csv(runs=runs, output=output)
+    if frozen_requirements:
+        name = frozen_requirements_dest[:-4] + "_REQ" + frozen_requirements_dest[-4:]
+        setup_tools.add_frozen_requirements.merge(frozen_requirements_source, frozen_requirements_dest, name)
+        setup_tools.create_frozen_requirements.write_requirements(name)
 
 
 if __name__ == '__main__':

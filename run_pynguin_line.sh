@@ -8,6 +8,10 @@ if [[ -z "${PYNGUIN_CSV_FILE}" ]]; then
     echo "ERROR: PYNGUIN_CSV_FILE not defined"
     exit 1
 fi
+if [[ -z "${WRITE_REQS}" ]]; then
+    echo "ERROR: WRITE_REQS is not defined"
+    exit 1
+fi
 if [[ -z "${PYNGUIN_META_FILE}" ]]; then
     echo "ERROR: PYNGUIN_META_FILE not defined"
     exit 1
@@ -86,6 +90,7 @@ if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
 	    "${CONFIG_NAME}" \
 	    "${CONFIGURATION_OPTIONS}" \
 	    "${SEED}" \
+	    "${WRITE_REQS}" \
         & srunPid=$!
 elif [[ ${PYNGUIN_RUN_ON} = "local" ]]; then
     ./run_pynguin_container.sh \

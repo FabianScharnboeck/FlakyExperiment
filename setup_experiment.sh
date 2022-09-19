@@ -2,12 +2,16 @@
 
 GIT_MODULE_PATH=./.git/modules
 PROJECTS_PATH=./src/projects
-REPOSITORY_PATH=./csv/martin_frozen_requirements_2.csv
-REPOSITORY_PATH_WITH_FROZEN_REQ=./csv/martin_frozen_requirements.csv
 SETUP_TOOLS_PATH=./setup_tools
 
+# CSV files
+REPOSITORY_PATH=./csv/martin_frozen_requirements_2.csv
+REPOSITORY_PATH_WITH_FROZEN_REQ=./csv/martin_frozen_requirements.csv
+
+
 MODE=${1}
-OUTPUT=${2}
+MODULE_EXPLORATION=${2}
+OUTPUT=${3}
 
 function echo_blue {
   BLUE="\033[1;34m"
@@ -39,6 +43,7 @@ function delete_submodule {
 # Read the csv file and extract module path information.
 # NOTE: Absolute directory paths, when working with git submodules, did not work reliably.
 # Therefore relative paths are used.
+if [[ ${MODULE_EXPLORATION} = true ]]; then
 {
 while IFS=, read -r Project_Name Project_URL Project_Hash
 do
@@ -71,11 +76,11 @@ do
   fi
 done
 } < <(tail -n +2 "${REPOSITORY_PATH}")
+fi
 
 PYNGUIN_OUTPUT=./src/pynguin_csv/pynguin.csv
 if [[ "${MODE}" = "FROZEN_REQ" ]]; then
-  python3 experiment.py -d exp_flakiness.xml -r "${OUTPUT}" -o "${PYNGUIN_OUTPUT}"
-  python3 ./setup_tools/add_frozen_requirements.py -p "${REPOSITORY_PATH_WITH_FROZEN_REQ}" -d "${PYNGUIN_OUTPUT}"
+  python3 experiment.py -d exp_flakiness.xml -r "${OUTPUT}" -o "${PYNGUIN_OUTPUT}" -e True -g "${REPOSITORY_PATH_WITH_FROZEN_REQ}" -i "${PYNGUIN_OUTPUT}"
 elif [[ "${MODE}" = "TAG" ]]; then
   python3 experiment.py -d exp_flakiness.xml -r "${OUTPUT}" -o "${PYNGUIN_OUTPUT}"
 fi

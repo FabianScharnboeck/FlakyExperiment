@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 
 
-def merge(path, destination):
+def merge(path: str, destination: str, name: str):
     left = pd.read_csv(path)
     right = pd.read_csv(destination)
     if right["PROJ_HASH"].str.endswith("\n").all():
@@ -25,8 +25,7 @@ def merge(path, destination):
     cols = cols[1:] + cols[:1]
     merged_new = merged[cols]
 
-    destination_new: str = destination[:-4] + "_frozen_req" + destination[-4:]
-    merged_new.to_csv(destination_new, index=False)
+    merged_new.to_csv(name, index=False)
 
 
 if __name__ == "__main__":
@@ -45,9 +44,17 @@ if __name__ == "__main__":
         required=True,
         help="Path to Pynguin CSV file to add the frozen requirements to."
     )
+    parser.add_argument(
+        "-n",
+        "--name",
+        dest="name",
+        required=True,
+        help="Name of file with frozen reqs."
+    )
 
     args = parser.parse_args()
     path: str = args.path
     destination: str = args.destination
+    name:str = args.name
 
-    merge(path, destination)
+    merge(path, destination, name)

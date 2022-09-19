@@ -39,6 +39,7 @@ FROZEN_REQUIREMENTS="${11}"
 CONFIGURATION_NAME="${12}"
 CONFIGURATION_OPTIONS="${13}"
 SEED="${14}"
+WRITE_REQS="${15}"
 
 function download_dependencies {
   mkdir -p "${PACKAGE_DIR_PHYSICAL}"
@@ -95,7 +96,7 @@ echo "-- $0 (run_container.sh)"
         debug_echo "    PROJECT PYPI TAG:       $PYPI_TAG"
         debug_echo "    PROJECT MODULES:        $PROJ_MODULES"
 
-clone_project
+
 
 # -- PREPARE ENVIRONMENT
 unset XDG_RUNTIME_DIR
@@ -129,7 +130,12 @@ then
 fi
 
 
-download_dependencies
+# -- CLONE PROJECT, WRITE DEPENDENCY FILES IF NOT DONE YET AND EXECUTE THE CONTAINER
+clone_project
+
+if [[ "${WRITE_REQS}" = "true" ]]; then
+  download_dependencies
+fi
 
 IFS=' ' read -ra ELEMENTS <<< "${PROJ_MODULES}"
 for MODULE in "${ELEMENTS[@]}"; do
