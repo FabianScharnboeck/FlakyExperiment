@@ -10,8 +10,9 @@ def write_requirements(path: str):
             if not os.path.exists(row["PACKAGE_DIR_PHYSICAL"]):
                 os.makedirs(row["PACKAGE_DIR_PHYSICAL"])
             with open(row["PACKAGE_DIR_PHYSICAL"]+"/package.txt", "w") as d:
-                reqs: str = row["frozen_requirements"]
-                d.write(reqs)
+                reqs: str = row["FROZEN_REQUIREMENTS"]
+                reqs_escape: str = reqs.replace(" ", "\n")
+                d.write(reqs_escape)
 
 
 if __name__ == "__main__":

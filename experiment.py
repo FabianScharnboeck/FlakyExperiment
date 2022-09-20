@@ -247,13 +247,14 @@ def write_csv(runs: List[Run], output: str):
                              "PROJECT_SOURCES", "PROJ_HASH", "PYPI_TAG", "PROJ_MODULES", "CONFIG_NAME",
                              "CONFIGURATION_OPTIONS", "TESTS_TO_BE_RUN", "FUNCS_TO_TRACE", "THIRD_PARTY_COVERAGE",
                              "NUM_FLAPY_RUNS", "SEED", "FROZEN_REQUIREMENTS"]
+        frozen_reqs_no_escape: str = run.project_frozen_reqs.replace("\n", " ")
 
         csv_data: List[str] = [input_dir_physical, output_dir_physical, package_dir_physical, base_path,
                                run.project_name,
                                run.project_sources, run.project_hash, run.project_pypi_version, " ".join(run.modules),
                                run.configuration_name, " ".join(run.configuration_options), pynguin_test_dir,
                                run.flapy_config[1], run.flapy_config[1], run.flapy_config[2],
-                               run.run_id, run.project_frozen_reqs]
+                               run.run_id, frozen_reqs_no_escape]
         with open(base_path / output, mode="a") as f:
             writer = csv.writer(f)
             if f.tell() == 0:
