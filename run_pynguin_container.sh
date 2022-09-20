@@ -146,7 +146,7 @@ for MODULE in "${ELEMENTS[@]}"; do
       --rm -v "$INPUT_DIR_PHYSICAL":/input:ro \
       -v "$OUTPUT_DIR_PHYSICAL":/output \
       -v "$PACKAGE_DIR_PHYSICAL":/package:ro \
-      localhost/pynguin-0.25.2 \
+      localhost/pynguin-0.26.0 \
       --project-path /input \
       --output-path /output \
       --configuration-id "${CONFIGURATION_NAME}" \
