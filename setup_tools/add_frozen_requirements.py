@@ -16,9 +16,6 @@ def merge(path: str, destination: str, name: str):
 
     merged = merged.drop(["Project_Name", "Project_URL", "Project_Hash"], axis=1)
     merged["frozen_requirements"] = merged["frozen_requirements"].str.replace("\n", " ")
-    print(left['Project_Hash'])
-    print(right['PROJ_HASH'])
-    print(merged["frozen_requirements"])
 
     # Rearrange columns as frozen_reqs is first
     cols = merged.columns.tolist()
