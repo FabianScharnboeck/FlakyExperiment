@@ -146,21 +146,23 @@ def _get_configuration(configuration: ET.Element) -> Tuple[str, List[str]]:
 
 
 def _get_project(row, search_time: int) -> List[Project]:
-    name: str = row['NAME']
-    sources: str = row['URL']
+    name: str = row['Project_Name']
+    sources: str = row['Project_URL']
     version: str = "unknown"
-    project_hash: str = row['HASH']
-    project_pypi_version: str = row['PYPI_VERSION']
-    modules_str: str = row['MODULES']
-    modules_str = modules_str.replace('{', '')
-    modules_str = modules_str.replace('}', '')
-    modules_str = modules_str.replace('\'', '')
+    project_hash: str = row['Project_Hash']
+    project_pypi_version: str = ""
+    project_frozen_reqs: str = row["frozen_reqs"]
+    modules_str: str = row['found_modules_all']
     modules: List[str] = []
+
+
+    if project_frozen_reqs == "" or modules_str == "":
+        return []
 
     # Split up the module if there are too many of them to be handled by SLURM.
     count: int = 0
     projects: List[Project] = []
-    for value in modules_str.split(','):
+    for value in modules_str.split(' '):
         count += 1
         value = value.strip()
         modules.append(value)
@@ -173,7 +175,7 @@ def _get_project(row, search_time: int) -> List[Project]:
                 modules=modules,
                 project_hash=project_hash,
                 project_pypi_version=project_pypi_version,
-                frozen_reqs=""
+                frozen_reqs=project_frozen_reqs
             )
             modules = []
             projects.append(proj)
@@ -185,7 +187,7 @@ def _get_project(row, search_time: int) -> List[Project]:
             modules=modules,
             project_hash=project_hash,
             project_pypi_version=project_pypi_version,
-            frozen_reqs=""
+            frozen_reqs=project_frozen_reqs
         )
         projects.append(proj)
 
@@ -244,7 +246,7 @@ def write_csv(runs: List[Run], output: str):
                              "PROJ_NAME",
                              "PROJECT_SOURCES", "PROJ_HASH", "PYPI_TAG", "PROJ_MODULES", "CONFIG_NAME",
                              "CONFIGURATION_OPTIONS", "TESTS_TO_BE_RUN", "FUNCS_TO_TRACE", "THIRD_PARTY_COVERAGE",
-                             "NUM_FLAPY_RUNS", "SEED", "frozen_requirements"]
+                             "NUM_FLAPY_RUNS", "SEED", "FROZEN_REQUIREMENTS"]
 
         csv_data: List[str] = [input_dir_physical, output_dir_physical, package_dir_physical, base_path,
                                run.project_name,

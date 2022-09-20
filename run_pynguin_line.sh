@@ -42,7 +42,7 @@ echo "csv_line:   ${csv_line}" >> "${PYNGUIN_META_FILE}"
 # -- PARSE CSV LINE
 IFS=, read -r INPUT_DIR_PHYSICAL OUTPUT_DIR_PHYSICAL PACKAGE_DIR_PHYSICAL BASE_PATH PROJ_NAME PROJ_SOURCES \
     PROJ_HASH PYPI_TAG PROJ_MODULES CONFIG_NAME CONFIGURATION_OPTIONS TESTS_TO_BE_RUN FUNCS_TO_TRACE \
-    THIRD_PARTY_COVERAGE NUM_FLAPY_RUNS SEED frozen_requirements <<< "${csv_line}"
+    THIRD_PARTY_COVERAGE NUM_FLAPY_RUNS SEED FROZEN_REQUIREMENTS <<< "${csv_line}"
 
 # -- DEBUG OUTPUT
 echo "    ----"
@@ -57,7 +57,7 @@ echo "    project url:            ${PROJ_SOURCES}"
 echo "    project git hash:       ${PROJ_HASH}"
 echo "    project pypi tag:       ${PYPI_TAG}"
 echo "    project modules:        ${PROJ_MODULES}"
-echo "    project requirements:   ${frozen_requirements}"
+echo "    project requirements:   ${FROZEN_REQUIREMENTS}"
 echo "    project seed:           ${SEED}"
 
 # -- LOG
@@ -86,7 +86,7 @@ if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
 	    "${PROJ_MODULES}" \
 	    "${PROJ_HASH}" \
 	    "${PYPI_TAG}" \
-	    "${frozen_requirements}" \
+	    "${FROZEN_REQUIREMENTS}" \
 	    "${CONFIG_NAME}" \
 	    "${CONFIGURATION_OPTIONS}" \
 	    "${SEED}" \
