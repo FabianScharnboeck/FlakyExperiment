@@ -35,10 +35,9 @@ PROJ_SOURCES="${7}"
 PROJ_MODULES="${8}"
 PROJ_HASH="${9}"
 PYPI_TAG="${10}"
-FROZEN_REQUIREMENTS="${11}"
-CONFIGURATION_NAME="${12}"
-CONFIGURATION_OPTIONS="${13}"
-SEED="${14}"
+CONFIGURATION_NAME="${11}"
+CONFIGURATION_OPTIONS="${12}"
+SEED="${13}"
 
 function clone_project {
   echo_blue "Adding project into destination folder"

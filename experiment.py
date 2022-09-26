@@ -245,14 +245,12 @@ def write_csv(runs: List[Run], output: str):
         header: List[str] = ["INPUT_DIR_PHYSICAL", "OUTPUT_DIR_PHYSICAL", "PACKAGE_DIR_PHYSICAL", "BASE_PATH",
                              "PROJ_NAME",
                              "PROJECT_SOURCES", "PROJ_HASH", "PYPI_TAG", "PROJ_MODULES", "CONFIG_NAME",
-                             "CONFIGURATION_OPTIONS", "TESTS_TO_BE_RUN", "FUNCS_TO_TRACE", "THIRD_PARTY_COVERAGE",
-                             "NUM_FLAPY_RUNS", "SEED"]
+                             "CONFIGURATION_OPTIONS", "TESTS_TO_BE_RUN", "SEED"]
 
         csv_data: List[str] = [input_dir_physical, output_dir_physical, package_dir_physical, base_path,
-                               run.project_name,
-                               run.project_sources, run.project_hash, run.project_pypi_version, " ".join(run.modules),
-                               run.configuration_name, " ".join(run.configuration_options), pynguin_test_dir,
-                               run.flapy_config[1], run.flapy_config[1], run.flapy_config[2], run.run_id]
+                               run.project_name, run.project_sources, run.project_hash, run.project_pypi_version,
+                               " ".join(run.modules), run.configuration_name, " ".join(run.configuration_options),
+                               pynguin_test_dir, run.run_id]
 
         # Write requirements
         #if not os.path.exists(package_dir_physical):
