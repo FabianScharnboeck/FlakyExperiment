@@ -10,7 +10,6 @@ from typing import List, Union, Tuple, Dict, Optional
 import csv
 import setup_tools.add_frozen_requirements
 import setup_tools.create_frozen_requirements
-import pandas as pd
 import ast
 
 SEED: int = 4105
@@ -154,27 +153,26 @@ def _get_project(row, search_time: int) -> List[Project]:
     project_hash: str = row['project_git_hash']
     project_pypi_version: str = ""
     project_frozen_reqs: str = row["project_reqs"]
-    modules_str: str = row['sut_modules']
-    modules: List[str] = []
+    modules: List[str] = ast.literal_eval(row['sut_modules'])
+    modules_split: List[str] = []
 
 
-    if project_frozen_reqs == "" or modules_str == "":
+    if project_frozen_reqs == "" or len(modules) == 0:
         return []
 
     # Split up the module if there are too many of them to be handled by SLURM.
     count: int = 0
     projects: List[Project] = []
-    for value in modules_str.split(' '):
+    for value in modules:
         count += 1
-        value = value.strip()
-        modules.append(value)
+        modules_split.append(value)
         if count >= search_time:
             count = 0
             proj: Project = Project(
                 name=name,
                 sources=sources,
                 version=version,
-                modules=modules,
+                modules=modules_split,
                 project_hash=project_hash,
                 project_pypi_version=project_pypi_version,
                 frozen_reqs=project_frozen_reqs
@@ -186,7 +184,7 @@ def _get_project(row, search_time: int) -> List[Project]:
             name=name,
             sources=sources,
             version=version,
-            modules=modules,
+            modules=modules_split,
             project_hash=project_hash,
             project_pypi_version=project_pypi_version,
             frozen_reqs=project_frozen_reqs
@@ -254,14 +252,13 @@ def write_csv(runs: List[Run], output: str):
                                run.project_name,
                                run.project_sources, run.project_hash, run.project_pypi_version, " ".join(run.modules),
                                run.configuration_name, " ".join(run.configuration_options), pynguin_test_dir,
-                               run.flapy_config[1], run.flapy_config[1], run.flapy_config[2],
-                               run.run_id]
+                               run.flapy_config[1], run.flapy_config[1], run.flapy_config[2], run.run_id]
 
         # Write requirements
-        reqs_list = ast.literal_eval(run.project_frozen_reqs)
-        with open(package_dir_physical/"package.txt", mode="a") as g:
-            for val in reqs_list:
-                g.write(val + "\n")
+        #if not os.path.exists(package_dir_physical):
+         #   os.makedirs(package_dir_physical)
+        #with open(package_dir_physical/"package.txt", mode="a") as g:
+          #  g.write(run.project_frozen_reqs)
 
         with open(base_path / output, mode="a") as f:
             writer = csv.writer(f)
@@ -269,8 +266,6 @@ def write_csv(runs: List[Run], output: str):
                 writer.writerow(header)
             writer.writerow(csv_data)
 
-        # Write requirements
-        setup_tools.create_frozen_requirements.write_requirements(str(base_path / output))
 
 
 def main(argv: List[str]) -> None:
