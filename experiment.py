@@ -146,10 +146,10 @@ def _get_configuration(configuration: ET.Element) -> Tuple[str, List[str]]:
 
 
 def _get_project(row, search_time: int) -> List[Project]:
-    name: str = row['Project_Name']
-    sources: str = row['Project_URL']
+    name: str = row['project_name']
+    sources: str = row['project_url']
     version: str = "unknown"
-    project_hash: str = row['Project_Hash']
+    project_hash: str = row['project_git_hash_INPUT']
     project_pypi_version: str = ""
     project_frozen_reqs: str = row["frozen_reqs"]
     modules_str: str = row['found_modules_all']

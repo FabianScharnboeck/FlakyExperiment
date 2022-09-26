@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=pynguin
 #SBATCH --time=24:00:00
-#SBATCH --mem=4GB
+#SBATCH --mem=8GB
 
 # -- CHECK IF ENVIRONMENT VARIABLES ARE DEFINED
 if [[ -z "${PYNGUIN_CSV_FILE}" ]]; then
@@ -73,7 +73,7 @@ echo "    project seed:           ${SEED}"
 if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
     srun \
         --output="$PYNGUIN_SLURM_OUTPUT_DIR/log.out" \
-        --error="$PYNGUIN_SLURM_OUTPUT_DIR/log.out" \
+        --error="$PYNGUIN_SLURM_OUTPUT_DIR/log.err" \
         -- \
         ./run_pynguin_container.sh \
             "${PYNGUIN_RUN_ON}" \

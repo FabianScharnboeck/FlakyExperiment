@@ -108,14 +108,19 @@ mkdir -p "${LOCAL_PODMAN_ROOT}"
 export HOME=$PODMAN_HOME
 alias p='podman --root=$LOCAL_PODMAN_ROOT'
 
+# -- CLONE PROJECT INTO SCRATCH DIRECTORY
+clone_project
+
 # -- INITIALIZE META FILE
 if [[ "${RUN_ON=}" = "cluster" ]]
 then
-  META_FILE="$INPUT_DIR_PHYSICAL/!pynguin_log.yaml"
-  touch "$META_FILE"
+  META_FILE="$INPUT_DIR_PHYSICAL/pynguin_log.log"
+  
 
   # -- LOG HOSTNAME
+  echo "-- CONTAINER AND NODE RELATED ARGUMENTS --"	  >> "$META_FILE"
   echo "hostname:               $(cat /etc/hostname)"     >> "$META_FILE"
+  echo "flapy_container_id:	$(podman --root="${LOCAL_PODMAN_ROOT}" images localhost/pynguin-0.26.0 --format "{{.ID}}")" >> "$META_FILE"
   echo "-- PYNGUIN RELATED ARGUMENTS --"                  >> "$META_FILE"
   echo "INPUT DIRECTORY:        $INPUT_DIR_PHYSICAL"      >> "$META_FILE"
   echo "OUTPUT DIRECTORY:       $OUTPUT_DIR_PHYSICAL"     >> "$META_FILE"
@@ -130,8 +135,7 @@ then
 fi
 
 
-# -- CLONE PROJECT, WRITE DEPENDENCY FILES IF NOT DONE YET AND EXECUTE THE CONTAINER
-clone_project
+# -- WRITE DEPENDENCY FILES IF NOT DONE YET AND EXECUTE THE CONTAINER
 
 if [[ "${WRITE_REQS}" = "true" ]]; then
   download_dependencies

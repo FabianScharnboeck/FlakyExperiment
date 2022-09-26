@@ -19,8 +19,7 @@ then SLURM_OUTPUT_DIR=$(pwd)/src/results/pynguin_slurm_log/slurm_log_"$DATE_TIME
 mkdir -p ${SLURM_OUTPUT_DIR}
 cp "${0}" "${SLURM_OUTPUT_DIR}"
 cp "${CSV_FILE}" "${SLURM_OUTPUT_DIR}/input.csv"
-PYNGUIN_META_FILE="${SLURM_OUTPUT_DIR}/pynguin_run.yaml"
-touch ${PYNGUIN_META_FILE}
+PYNGUIN_META_FILE="${SLURM_OUTPUT_DIR}/pynguin_run.log"
 fi
 
 # -- EXPORT VARIABLES
@@ -34,6 +33,7 @@ export WRITE_REQS="${WRITE_REQS}"
 SBATCH_LOG_FOLDER="$SLURM_OUTPUT_DIR/sbatch_logs/"
 mkdir -p -m 777 "$SBATCH_LOG_FOLDER"
 SBATCH_LOG_FILE_PATTERN="$SBATCH_LOG_FOLDER/log-%a.out"
+SBATCH_LOG_FILE_PATTERN_ERR="$SBATCH_LOG_FOLDER/log-%a.err"
 
 # -- INPUT PRE-PROCESSING"
 CSV_FILE_LENGTH=$(wc -l < "$CSV_FILE")
@@ -48,7 +48,7 @@ then
     sbatch_info=$(sbatch --parsable \
         --constraint="${CONSTRAINT}" \
         --output "$SBATCH_LOG_FILE_PATTERN" \
-        --error  "$SBATCH_LOG_FILE_PATTERN" \
+        --error  "$SBATCH_LOG_FILE_PATTERN_ERR" \
         --array=2-"$CSV_FILE_LENGTH" \
         -- \
         ./run_pynguin_line.sh
