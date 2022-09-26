@@ -39,36 +39,6 @@ FROZEN_REQUIREMENTS="${11}"
 CONFIGURATION_NAME="${12}"
 CONFIGURATION_OPTIONS="${13}"
 SEED="${14}"
-WRITE_REQS="${15}"
-
-function download_dependencies {
-  mkdir -p "${PACKAGE_DIR_PHYSICAL}"
-  if [[ "${PYPI_TAG}" -ne "" ]]; then
-    tag=${PYPI_TAG}
-    echo_blue "Dependency option: PYPI_TAG"
-    echo_blue "Writing dependency into requirements file..."
-    if [ -z "${tag}" ]
-    then echo "${PROJECT_NAME}" > "${PACKAGE_DIR_PHYSICAL}"/package.txt
-    else
-    echo "${PROJECT_NAME}==${tag}" > "${PACKAGE_DIR_PHYSICAL}"/package.txt
-    fi
-    echo_blue "Dependencies written to requirements file..."
-  else
-    echo_blue "Dependency option: FROZEN_REQUIREMENTS"
-    if [ -z "${FROZEN_REQUIREMENTS}" ]
-      then echo "Error. FROZEN_REQUIREMENTS was empty."
-      exit 1
-    else
-      echo_blue "Writing dependency into requirements file..."
-      IFS=' ' read -ra ELEMENTS <<< "${FROZEN_REQUIREMENTS}"
-      for REQ in "${ELEMENTS[@]}"; do
-	echo "Printing ${REQ} into ${PACKAGE_DIR_PHYSICAL}"
-        printf "%s\n" "${REQ}" >> "${PACKAGE_DIR_PHYSICAL}"/package.txt
-      done
-    fi
-  fi
-
-}
 
 function clone_project {
   echo_blue "Adding project into destination folder"
@@ -132,13 +102,6 @@ then
   echo "PROJECT GIT HASH:       $PROJ_HASH"               >> "$META_FILE"
   echo "PROJECT PYPI TAG:       $PYPI_TAG"                >> "$META_FILE"
   echo "PROJECT MODULES:        $PROJ_MODULES"            >> "$META_FILE"
-fi
-
-
-# -- WRITE DEPENDENCY FILES IF NOT DONE YET AND EXECUTE THE CONTAINER
-
-if [[ "${WRITE_REQS}" = "true" ]]; then
-  download_dependencies
 fi
 
 IFS=' ' read -ra ELEMENTS <<< "${PROJ_MODULES}"

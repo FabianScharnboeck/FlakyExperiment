@@ -10,6 +10,8 @@ from typing import List, Union, Tuple, Dict, Optional
 import csv
 import setup_tools.add_frozen_requirements
 import setup_tools.create_frozen_requirements
+import pandas as pd
+import ast
 
 SEED: int = 4105
 
@@ -149,10 +151,10 @@ def _get_project(row, search_time: int) -> List[Project]:
     name: str = row['project_name']
     sources: str = row['project_url']
     version: str = "unknown"
-    project_hash: str = row['project_git_hash_INPUT']
+    project_hash: str = row['project_git_hash']
     project_pypi_version: str = ""
-    project_frozen_reqs: str = row["frozen_reqs"]
-    modules_str: str = row['found_modules_all']
+    project_frozen_reqs: str = row["project_reqs"]
+    modules_str: str = row['sut_modules']
     modules: List[str] = []
 
 
@@ -246,15 +248,21 @@ def write_csv(runs: List[Run], output: str):
                              "PROJ_NAME",
                              "PROJECT_SOURCES", "PROJ_HASH", "PYPI_TAG", "PROJ_MODULES", "CONFIG_NAME",
                              "CONFIGURATION_OPTIONS", "TESTS_TO_BE_RUN", "FUNCS_TO_TRACE", "THIRD_PARTY_COVERAGE",
-                             "NUM_FLAPY_RUNS", "SEED", "FROZEN_REQUIREMENTS"]
-        frozen_reqs_no_escape: str = run.project_frozen_reqs.replace("\n", " ")
+                             "NUM_FLAPY_RUNS", "SEED"]
 
         csv_data: List[str] = [input_dir_physical, output_dir_physical, package_dir_physical, base_path,
                                run.project_name,
                                run.project_sources, run.project_hash, run.project_pypi_version, " ".join(run.modules),
                                run.configuration_name, " ".join(run.configuration_options), pynguin_test_dir,
                                run.flapy_config[1], run.flapy_config[1], run.flapy_config[2],
-                               run.run_id, frozen_reqs_no_escape]
+                               run.run_id]
+
+        # Write requirements
+        reqs_list = ast.literal_eval(run.project_frozen_reqs)
+        with open(package_dir_physical/"package.txt", mode="a") as g:
+            for val in reqs_list:
+                g.write(val + "\n")
+
         with open(base_path / output, mode="a") as f:
             writer = csv.writer(f)
             if f.tell() == 0:
