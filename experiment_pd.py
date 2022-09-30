@@ -146,14 +146,16 @@ def _get_project(row, search_time: int) -> List[Project]:
                 project_pypi_version=project_pypi_version,
                 frozen_reqs=project_frozen_reqs
             )
-            modules = []
+            modules_split = []
             projects.append(proj)
-    if len(modules) != 0:
+
+    # Ersetzer modules durch modules_split wenn Kommentare weg.
+    if len(modules_split) != 0:
         proj: Project = Project(
             name=name,
             sources=sources,
             version=version,
-            modules=modules_split,
+            modules=modules_split, # Hier auch modules_split dann
             project_hash=project_hash,
             project_pypi_version=project_pypi_version,
             frozen_reqs=project_frozen_reqs
@@ -220,10 +222,10 @@ def write_csv(runs: List[Run], output: str):
         df = df.append(csv_data_dict, ignore_index=True)
 
         # Write requirements
-        # if not os.path.exists(package_dir_physical):
-        #   os.makedirs(package_dir_physical)
-        # with open(package_dir_physical/"package.txt", mode="a") as g:
-        #  g.write(run.project_frozen_reqs)
+        if not os.path.exists(package_dir_physical):
+            os.makedirs(package_dir_physical)
+        with open(package_dir_physical/"package.txt", mode="a") as g:
+            g.write(str(run.project_frozen_reqs))
     df.to_csv(path_or_buf=(base_path / output), index=False)
 
 
@@ -259,7 +261,7 @@ def main(argv: List[str]) -> None:
     run_configurations, projects, flapy_config = _parse_xml(config, repos)
     runs: List[Run] = _create_runs(run_configurations, projects, flapy_config)
 
-    #write_csv(runs=runs, output=output)
+    write_csv(runs=runs, output=output)
 
 
 if __name__ == '__main__':
