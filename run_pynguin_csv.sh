@@ -10,7 +10,6 @@ function debug_echo {
 RUN_ON="${1}"
 CSV_FILE="${2}"
 CONSTRAINT="${3}"
-WRITE_REQS="${4}"
 
 # -- CREATE LOG DIR
 if [[ $RUN_ON = "cluster" ]]
@@ -27,7 +26,6 @@ export PYNGUIN_CSV_FILE="${SLURM_OUTPUT_DIR}/input.csv"
 export PYNGUIN_RUN_ON=${RUN_ON}
 export PYNGUIN_SLURM_OUTPUT_DIR="${SLURM_OUTPUT_DIR}"
 export PYNGUIN_META_FILE="${PYNGUIN_META_FILE}"
-export WRITE_REQS="${WRITE_REQS}"
 
 # -- SBATCH LOG FILES
 SBATCH_LOG_FOLDER="$SLURM_OUTPUT_DIR/sbatch_logs/"

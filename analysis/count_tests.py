@@ -8,23 +8,13 @@ from pandas import DataFrame
 
 def parse_csv(path: str, output: str):
     df: DataFrame = pd.read_csv(path)
-    df_new = df.copy()
-    df_new["CHUNK_PATH"] = np.NaN
-    df_new["GEN_TEST_MODULES"] = np.NaN
-    df_new["GEN_TEST_NUM"] = np.NaN
-    df_new.apply(axis=0, func=search_tests, result_type="expand")
-    df_new.to_csv(output)
-
-
-def search_tests(row):
-    proj_path: str = row["OUTPUT_DIR_PHYSICAL"]
-    row["CHUNK_PATH"] = proj_path
-    if len(os.listdir(path=proj_path)) != 0:
-        row["GEN_TEST_MODULES"] = os.listdir(path=proj_path)
-        row["GEN_TEST_NUM"] = len(os.listdir(path=proj_path))
-    else:
-        row["GEN_TEST_MODULES"] = []
-        row["GEN_TEST_NUM"] = 0
+    df_mod: DataFrame = pd.DataFrame()
+    df_mod["CHUNK_PATH"] = df["OUTPUT_DIR_PHYSICAL"]
+    df_mod["PROJECT_URL"] = df["PROJECT_SOURCES"]
+    df_mod["PROJECT_HASH"] = df["PROJ_HASH"]
+    df_mod["GEN_TEST_MODULES"] = df["OUTPUT_DIR_PHYSICAL"].apply(func=os.listdir)
+    df_mod["NUM_GEN_TEST_MODULES"] = df_mod["GEN_TEST_MODULES"].apply(func=len)
+    df_mod.to_csv(output)
 
 
 if __name__ == "__main__":

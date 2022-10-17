@@ -8,10 +8,6 @@ if [[ -z "${PYNGUIN_CSV_FILE}" ]]; then
     echo "ERROR: PYNGUIN_CSV_FILE not defined"
     exit 1
 fi
-if [[ -z "${WRITE_REQS}" ]]; then
-    echo "ERROR: WRITE_REQS is not defined"
-    exit 1
-fi
 if [[ -z "${PYNGUIN_META_FILE}" ]]; then
     echo "ERROR: PYNGUIN_META_FILE not defined"
     exit 1
@@ -43,6 +39,9 @@ echo "csv_line:   ${csv_line}" >> "${PYNGUIN_META_FILE}"
 IFS=, read -r INPUT_DIR_PHYSICAL OUTPUT_DIR_PHYSICAL PACKAGE_DIR_PHYSICAL BASE_PATH PROJ_NAME PROJ_SOURCES \
     PROJ_HASH PYPI_TAG PROJ_MODULES CONFIG_NAME CONFIGURATION_OPTIONS TESTS_TO_BE_RUN SEED <<< "${csv_line}"
 
+# -- REPLACE ; WITH , IN CONFIGURATION OPTIONS
+CONFIGURATION_OPTIONS=${CONFIGURATION_OPTIONS//";"/","}
+
 # -- DEBUG OUTPUT
 echo "    ----"
 echo "    input directory:        ${INPUT_DIR_PHYSICAL}"
@@ -67,11 +66,37 @@ echo "    project seed:           ${SEED}"
     echo "hostname_run_line:      $(cat /etc/hostname)"
 } >> "${PYNGUIN_META_FILE}"
 
+function clone_project {
+ echo "Adding project into destination folder"
+ git clone "${PROJ_SOURCES}" "${INPUT_DIR_PHYSICAL}"
+ cd "${INPUT_DIR_PHYSICAL}"
+ mkdir -p "${OUTPUT_DIR_PHYSICAL}"
+ if [ -n "${PROJ_HASH}" ]
+     then git reset --hard "${PROJ_HASH}"
+     echo "Resetting to hash: ${PROJ_HASH}"
+ fi
+ cd "${BASE_PATH}"
+}
+
+# -- CLONE THE PROJECT
+clone_project
+
+PROJECT_SLURM_OUTPUT_DIR="${PYNGUIN_SLURM_OUTPUT_DIR}/logs/${PROJ_NAME}_${LINE_NUM}"
+mkdir -p -m 777 $PROJECT_SLURM_OUTPUT_DIR
+
 # -- RUN CONTAINER
-if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
-    srun \
-        --output="$PYNGUIN_SLURM_OUTPUT_DIR/log.out" \
-        --error="$PYNGUIN_SLURM_OUTPUT_DIR/log.err" \
+IFS=' ' read -ra ELEMENTS <<< "${PROJ_MODULES}"
+for MODULE in "${ELEMENTS[@]}"; do
+    if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
+
+        # -- CREATE MODULE SUBDIRECTORY FOR LOGGING
+        MODULE_SLURM_OUTPUT_DIR="${PROJECT_SLURM_OUTPUT_DIR}/${MODULE}"
+        mkdir -p -m 777 ${MODULE_SLURM_OUTPUT_DIR}
+
+        # -- RUN PYNGUIN CONTAINER
+        srun \
+        --output="$MODULE_SLURM_OUTPUT_DIR/${MODULE}.out" \
+        --error="$MODULE_SLURM_OUTPUT_DIR/${MODULE}.err" \
         -- \
         ./run_pynguin_container.sh \
             "${PYNGUIN_RUN_ON}" \
@@ -81,21 +106,23 @@ if [[ ${PYNGUIN_RUN_ON} = "cluster" ]]; then
 	    "${PACKAGE_DIR_PHYSICAL}" \
 	    "${PROJ_NAME}" \
 	    "${PROJ_SOURCES}" \
-	    "${PROJ_MODULES}" \
+	    "${MODULE}" \
 	    "${PROJ_HASH}" \
 	    "${PYPI_TAG}" \
 	    "${CONFIG_NAME}" \
 	    "${CONFIGURATION_OPTIONS}" \
 	    "${SEED}" \
-        & srunPid=$!
-elif [[ ${PYNGUIN_RUN_ON} = "local" ]]; then
-    ./run_pynguin_container.sh \
-        "TODO" \
-    & srunPid=$!
-else
-    echo "Unknown value '$PYNGUIN_RUN_ON' for RUN_ON. Please use 'cluster' or 'local'."
-    exit
-fi
+            "${MODULE_SLURM_OUTPUT_DIR}" \
+            & srunPid=$!
+    elif [[ ${PYNGUIN_RUN_ON} = "local" ]]; then
+            ./run_pynguin_container.sh \
+            "TODO" \
+            & srunPid=$!
+    else
+            echo "Unknown value '$PYNGUIN_RUN_ON' for RUN_ON. Please use 'cluster' or 'local'."
+            exit
+    fi
+done
 
 trap sighdl INT TERM HUP QUIT
 
