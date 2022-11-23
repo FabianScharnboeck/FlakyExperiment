@@ -1,10 +1,7 @@
-from typing import Tuple
-
 import fire
 import pandas as pd
 from pandas import DataFrame
 import os
-import argparse
 import dataclasses
 import random
 import time
@@ -104,31 +101,6 @@ class TestCounter:
         self._df_count_tests.to_csv(path)
 
 
-def _get_flapy_config(element: Optional[ET.Element]) -> List[str]:
-    if element is None:
-        return []
-    result = []
-    for option in element:
-        result.append(
-            f'{option.attrib["value"]}'
-        )
-    return result
-
-
-def _get_global_config(element: Optional[ET.Element]) -> List[str]:
-    if element is None:
-        return [], 140
-    result = []
-    for option in element:
-        if option.attrib["key"] == "maximum_search_time":
-            max_search_time: int = int(option.attrib["value"])
-            search_time_split: int = int((22 * 60 * 60) / max_search_time)
-        result.append(
-            f'--{option.attrib["key"]} {option.attrib["value"]}'
-        )
-    return result, search_time_split
-
-
 class ExperimentCreator:
     def __init__(self, repos, config):
         self.SEED = 4105
@@ -165,6 +137,31 @@ class ExperimentCreator:
         run_id: int
         line: int
 
+    @staticmethod
+    def _get_flapy_config(element: Optional[ET.Element]) -> List[str]:
+        if element is None:
+            return []
+        result = []
+        for option in element:
+            result.append(
+                f'{option.attrib["value"]}'
+            )
+        return result
+
+    @staticmethod
+    def _get_global_config(element: Optional[ET.Element]) -> List[str]:
+        if element is None:
+            return [], 140
+        result = []
+        for option in element:
+            if option.attrib["key"] == "maximum_search_time":
+                max_search_time: int = int(option.attrib["value"])
+                search_time_split: int = int((22 * 60 * 60) / max_search_time)
+            result.append(
+                f'--{option.attrib["key"]} {option.attrib["value"]}'
+            )
+        return result, search_time_split
+
     def _parse_xml(self, file_name: Union[str, os.PathLike], csv_file_name: Union[str, os.PathLike]
                    ) -> Tuple[Dict[str, List[str]], List[Project]]:
         tree = ET.ElementTree(file=file_name)
@@ -172,8 +169,8 @@ class ExperimentCreator:
 
         setup = experiment.find("setup")
         configurations = setup.find("configurations")
-        global_config, search_time = _get_global_config(configurations.find("global"))
-        flapy_config = _get_flapy_config(configurations.find("flapy"))
+        global_config, search_time = self._get_global_config(configurations.find("global"))
+        flapy_config = self._get_flapy_config(configurations.find("flapy"))
         configs: Dict[str, List[str]] = {}
         for configuration in configurations.findall("configuration"):
             name, values = self._get_configuration(configuration)
@@ -246,13 +243,13 @@ class ExperimentCreator:
                 modules_split = []
                 projects.append(proj)
 
-        # Ersetzer modules durch modules_split wenn Kommentare weg.
+
         if len(modules_split) != 0:
             proj: ExperimentCreator.Project = ExperimentCreator.Project(
                 name=name,
                 sources=sources,
                 version=version,
-                modules=modules_split,  # Hier auch modules_split dann
+                modules=modules_split,
                 project_hash=project_hash,
                 project_pypi_version=project_pypi_version,
                 frozen_reqs=project_frozen_reqs
@@ -290,10 +287,19 @@ class ExperimentCreator:
     def to_csv(self, output: str):
         runs = self.runs
         """Creates an xml file for the pynguin run setup by csv"""
-        header: List[str] = ["INPUT_DIR_PHYSICAL", "OUTPUT_DIR_PHYSICAL", "PACKAGE_DIR_PHYSICAL", "BASE_PATH",
+        header: List[str] = ["INPUT_DIR_PHYSICAL",
+                             "OUTPUT_DIR_PHYSICAL",
+                             "PACKAGE_DIR_PHYSICAL",
+                             "BASE_PATH",
                              "PROJ_NAME",
-                             "PROJECT_SOURCES", "PROJ_HASH", "PYPI_TAG", "PROJ_MODULES", "CONFIG_NAME",
-                             "CONFIGURATION_OPTIONS", "TESTS_TO_BE_RUN", "SEED"]
+                             "PROJECT_SOURCES",
+                             "PROJ_HASH",
+                             "PYPI_TAG",
+                             "PROJ_MODULES",
+                             "CONFIG_NAME",
+                             "CONFIGURATION_OPTIONS",
+                             "TESTS_TO_BE_RUN",
+                             "SEED"]
         df: DataFrame = pd.DataFrame(columns=header)
         for run in runs:
             base_path = Path(".").absolute()
@@ -324,7 +330,9 @@ class ExperimentCreator:
                 os.makedirs(package_dir_physical)
             with open(package_dir_physical / "package.txt", mode="a") as g:
                 g.write(str(run.project_frozen_reqs))
+
         df.to_csv(path_or_buf=(base_path / output), index=False)
+
 
 def main() -> None:
     fire.Fire()
