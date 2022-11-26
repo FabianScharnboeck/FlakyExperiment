@@ -243,7 +243,6 @@ class ExperimentCreator:
                 modules_split = []
                 projects.append(proj)
 
-
         if len(modules_split) != 0:
             proj: ExperimentCreator.Project = ExperimentCreator.Project(
                 name=name,
@@ -332,6 +331,55 @@ class ExperimentCreator:
                 g.write(str(run.project_frozen_reqs))
 
         df.to_csv(path_or_buf=(base_path / output), index=False)
+
+
+class CreateFlapyCSV:
+    def __init__(self, df):
+        self._df: DataFrame = df
+        self._flapy_df = None
+        self.iterations = 1
+        self.num_runs = 1
+
+    @classmethod
+    def load_csv(cls, path: str):
+        return cls(pd.read_csv(path))
+
+    def set_num_runs(self, num: int):
+        self.num_runs = num
+        return self
+
+    def set_iterations(self, num_iterations: int):
+        self.iterations = num_iterations
+        return self
+
+    def to_csv(self, path: str):
+        if self.iterations is None or self.num_runs is None:
+            raise ValueError("iterations and num_runs must be ints!")
+
+        header = ["PROJECT_NAME",
+                  "PROJECT_URL",
+                  "PROJECT_HASH",
+                  "PYPI_TAG",
+                  "FUNCS_TO_TRACE",
+                  "TESTS_TO_BE_RUN",
+                  "NUM_RUNS"]
+        self._flapy_df = pd.DataFrame(columns=header)
+
+        for index, row in self._df.iterrows():
+            for _ in range(self.iterations):
+                data = {
+                    "PROJECT_NAME": row["PROJ_NAME"],
+                    "PROJECT_URL": row["INPUT_DIR_PHYSICAL"],
+                    "PROJECT_HASH": row["PROJ_HASH"],
+                    "PYPI_TAG": row["PYPI_TAG"],
+                    "FUNCS_TO_TRACE": row["FUNCS_TO_TRACE"],
+                    "TESTS_TO_BE_RUN": row["TESTS_TO_BE_RUN"],
+                    "NUM_RUNS": self.num_runs
+                }
+
+                self._flapy_df = self._flapy_df.append(data, ignore_index=True)
+
+        self._flapy_df.to_csv(path_or_buf=path, index=False)
 
 
 def main() -> None:
