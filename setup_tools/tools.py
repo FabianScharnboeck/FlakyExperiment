@@ -101,12 +101,12 @@ class TestCounter:
         self._df_count_tests.to_csv(path)
 
 
-class ExperimentCreator:
+class CreatePynguinCSV:
     def __init__(self, repos, config):
         self.SEED = 4105
         self.run_configurations, self.projects, self.flapy_config = self._parse_xml(config, repos)
-        self.runs: List[ExperimentCreator.Run] = self._create_runs(self.run_configurations, self.projects,
-                                                                   self.flapy_config)
+        self.runs: List[CreatePynguinCSV.Run] = self._create_runs(self.run_configurations, self.projects,
+                                                                  self.flapy_config)
 
     @classmethod
     def load(cls, repos: str, config: str):
@@ -186,13 +186,13 @@ class ExperimentCreator:
         for config_name, configuration in configs.items():
             run_configurations[config_name] = global_config + configuration
 
-        projects: List[ExperimentCreator.Project] = []
+        projects: List[CreatePynguinCSV.Project] = []
         df_projects = pd.read_csv(csv_file_name)
         count = 0
         count_empty = 0
         for index, row in df_projects.iterrows():
             count += 1
-            projects_split: List[ExperimentCreator.Project] = self._get_project(row, search_time)
+            projects_split: List[CreatePynguinCSV.Project] = self._get_project(row, search_time)
             if projects_split == []:
                 count_empty += 1
             projects.extend(projects_split)
@@ -225,13 +225,13 @@ class ExperimentCreator:
 
         # Split up the module if there are too many of them to be handled by SLURM.
         count: int = 0
-        projects: List[ExperimentCreator.Project] = []
+        projects: List[CreatePynguinCSV.Project] = []
         for value in modules:
             count += 1
             modules_split.append(value)
             if count >= search_time:
                 count = 0
-                proj: ExperimentCreator.Project = ExperimentCreator.Project(
+                proj: CreatePynguinCSV.Project = CreatePynguinCSV.Project(
                     name=name,
                     sources=sources,
                     version=version,
@@ -244,7 +244,7 @@ class ExperimentCreator:
                 projects.append(proj)
 
         if len(modules_split) != 0:
-            proj: ExperimentCreator.Project = ExperimentCreator.Project(
+            proj: CreatePynguinCSV.Project = CreatePynguinCSV.Project(
                 name=name,
                 sources=sources,
                 version=version,
@@ -262,11 +262,11 @@ class ExperimentCreator:
                      projects: List[Project],
                      flapy_config: List[str]
                      ) -> List[Run]:
-        runs: List[ExperimentCreator.Run] = []
+        runs: List[CreatePynguinCSV.Run] = []
         i = 0
         for run_name, run_configuration in run_configurations.items():
             for project in projects:
-                runs.append(ExperimentCreator.Run(
+                runs.append(CreatePynguinCSV.Run(
                     configuration_name=run_name,
                     configuration_options=run_configuration,
                     flapy_config=flapy_config,
@@ -357,7 +357,7 @@ class CreateFlapyCSV:
             raise ValueError("iterations and num_runs must be ints!")
 
         header = ["PROJECT_NAME",
-                  "PROJECT_URL",
+                  "PROJECT_PATH",
                   "PROJECT_HASH",
                   "PYPI_TAG",
                   "FUNCS_TO_TRACE",
@@ -369,7 +369,7 @@ class CreateFlapyCSV:
             for _ in range(self.iterations):
                 data = {
                     "PROJECT_NAME": row["PROJ_NAME"],
-                    "PROJECT_URL": row["INPUT_DIR_PHYSICAL"],
+                    "PROJECT_PATH": row["INPUT_DIR_PHYSICAL"],
                     "PROJECT_HASH": row["PROJ_HASH"],
                     "PYPI_TAG": row["PYPI_TAG"],
                     "FUNCS_TO_TRACE": row["FUNCS_TO_TRACE"],
@@ -388,3 +388,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
