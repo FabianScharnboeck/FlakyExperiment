@@ -22,9 +22,11 @@ TODO Verweis auf FlaPy?
 Prerequisites: It is assumed you are cd'd in the root folder of this project.
 The following example uses ``repos_test.csv`` and `exp_flakiness.xml` to create a pynguin_csv file.
 ```bash
-python3 ./setup_tools/tools.py CreatePynguinCSV load test.csv exp_flakiness.xml to_csv ./src/pynguin_csv/pynguin_test.csv
+python3 ./setup_tools/tools.py CreatePynguinCSV load repos_test.csv exp_flakiness.xml to_csv ./src/pynguin_csv/pynguin_test.csv
 ```
-Consider using the absolute path to the XML and CSV file if necessary. `exp_flakiness.xml` has the required
+You should now have a CSV in the pynguin_csv folder and test_package-subfolders containing `package.txt` containing the dependencies
+of the projects\
+- Consider using the absolute path to the XML and CSV file if necessary. `exp_flakiness.xml` has the required
 options for pynguin to use (do not change anything except the pynguin configurations and global configurations, as 
 this XML file only targets those lines. All other tags are legacy and are not used anymore).
 ## Starting the pynguin test generation (SLURM)
@@ -35,14 +37,17 @@ the setup for starting pynguin test generation is complete.
 ````bash
 ./run_pynguin_csv cluster ABSOLUTE_PATH_TO/src/pynguin_csv/pynguin_test.csv
 ````
-The script will automatically clone the project inside your `ROOT_FOLDER/projects` folder and use this
+The script will automatically clone the projects inside your `ROOT_FOLDER/projects` folder and use this
 as project input path for pynguin. It generates a directory inside it where it puts the tests.
+
+- Note that the ``local`` option does not work at the moment and is yet to be fixed.
+- Only ``cluster`` is a viable option at the moment.
 
 ## Starting the flapy test analysis (SLURM)
 Create a FlaPy CSV
 
 `````bash
-python3 ./setup_tools/tools.py CreateFlaPyCSV load ./src/pynguin_csv/pynguin_test.csv set_num_runs 30 set_iterations 10 to_csv ./src/flapy_csv/flapy_test.csv
+python3 ./setup_tools/tools.py CreateFlapyCSV load_csv ./src/pynguin_csv/pynguin_test.csv set_num_runs 30 set_iterations 10 to_csv ./src/flapy_csv/flapy_test.csv
 `````
 ### Calling flapy
 ````bash

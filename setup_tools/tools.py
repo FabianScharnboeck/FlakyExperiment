@@ -372,7 +372,7 @@ class CreateFlapyCSV:
                     "PROJECT_PATH": row["INPUT_DIR_PHYSICAL"],
                     "PROJECT_HASH": row["PROJ_HASH"],
                     "PYPI_TAG": row["PYPI_TAG"],
-                    "FUNCS_TO_TRACE": row["FUNCS_TO_TRACE"],
+                    "FUNCS_TO_TRACE": '',
                     "TESTS_TO_BE_RUN": row["TESTS_TO_BE_RUN"],
                     "NUM_RUNS": self.num_runs
                 }
