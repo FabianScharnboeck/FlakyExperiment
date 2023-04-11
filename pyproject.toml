@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "setup_tools"
+version = "0.1.0"
+description = "Project containing tools for automatically creating tests with Pynguin & analyzing them with FlaPy"
+authors = ["Fabian Scharnböck"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^1.5.2"
+seaborn = "^0.12.1"
+matplotlib = "^3.6.2"
+fire = "^0.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+tools = "setup_tools.tools:main"

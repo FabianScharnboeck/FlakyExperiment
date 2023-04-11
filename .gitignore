@@ -1,0 +1,6 @@
+../dist
+src/test_package/*
+src/results/*
+.idea
+./src/*
+./analysis/*

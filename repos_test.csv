@@ -1,0 +1,116 @@
+Iteration,slurm_array_task_id,slurm_array_job_id,slurm_job_id,input_csv_line_num,hostname_run_line,project_name,project_url,project_git_hash_INPUT,pypi_tag,func_to_trace,tests_to_be_run,num_runs,plus_random_runs,flapy args,hostname_run_container,flapy_container_id,project_git_hash,start_time,end_time,execution_time,found_modules_stephan,found_modules_stephan_status,found_modules_all,found_modules_all_status,potential_test_modules,test_modules_and_classes,frozen_reqs,frozen_reqs_status,project_reqs,project_reqs_status,Passed,Failed,Error,Skipped,sut_modules,sut_modules_spaces
+flapy-results_20220918_230734/SSplines_20220918_230734__cfATU,21061,53373016,53394129,21061,thor2,SSplines,https://github.com/qtiptip/ssplines,24d562a3adfadf375e2fad07016b80e965ce7a92,,,,1,False,,thor2,32c4cc4008ea,24d562a3adfadf375e2fad07016b80e965ce7a92,Sun Sep 18 23:10:40 UTC 2022,Sun Sep 18 23:11:13 UTC 2022,33.0,"['SSplines.spline_space', 'SSplines.helper_functions', 'SSplines.symbolic', 'SSplines.dicts', 'SSplines.constants', 'SSplines.simplex_spline', 'SSplines.spline_function']",ok,"['SSplines.constants', 'SSplines.dicts', 'SSplines.helper_functions', 'SSplines.simplex_spline', 'SSplines.spline_function', 'SSplines.spline_space', 'SSplines.symbolic', 'setup', 'tests.test_barycentric_coordinates', 'tests.test_coefficients', 'tests.test_derivatives_vs_polynomial_pieces', 'tests.test_determine_sub_triangle', 'tests.test_directional_coordinates', 'tests.test_evaluate_derivative', 'tests.test_exact_arithmetic', 'tests.test_hermite_basis', 'tests.test_non_zero_basis_derivatives', 'tests.test_non_zero_basis_evaluation', 'tests.test_numerical_quadrature', 'tests.test_points_from_barycentric_coordinates', 'tests.test_polynomial_piece', 'tests.test_projection_length', 'tests.test_ps12_vertices', 'tests.test_quadrature_over_several_triangles', 'tests.test_sample_triangle', 'tests.test_signed_area', 'tests.test_simplex_spline', 'tests.test_spline_function_evaluation', 'tests.test_spline_operators', 'tests.test_sub_matrix', 'tests.test_values_vs_polynomial_pieces']",ok,"['tests.test_non_zero_basis_evaluation', 'tests.test_polynomial_piece', 'tests.test_hermite_basis', 'tests.test_exact_arithmetic', 'tests.test_directional_coordinates', 'tests.test_determine_sub_triangle', 'tests.test_sample_triangle', 'tests.test_simplex_spline', 'tests.test_evaluate_derivative', 'tests.test_coefficients', 'tests.test_spline_operators', 'tests.test_sub_matrix', 'tests.test_derivatives_vs_polynomial_pieces', 'tests.test_non_zero_basis_derivatives', 'tests.test_quadrature_over_several_triangles', 'tests.test_points_from_barycentric_coordinates', 'tests.test_spline_function_evaluation', 'tests.test_projection_length', 'tests.test_barycentric_coordinates', 'tests.test_signed_area', 'tests.test_numerical_quadrature', 'tests.test_ps12_vertices', 'tests.test_values_vs_polynomial_pieces']","['tests.test_non_zero_basis_evaluation', 'tests.test_polynomial_piece', 'tests.test_hermite_basis', 'tests.test_exact_arithmetic', 'tests.test_directional_coordinates', 'tests.test_determine_sub_triangle', 'tests.test_sample_triangle', 'tests.test_simplex_spline', 'tests.test_evaluate_derivative', 'tests.test_coefficients', 'tests.test_spline_operators', 'tests.test_sub_matrix', 'tests.test_derivatives_vs_polynomial_pieces', 'tests.test_non_zero_basis_derivatives', 'tests.test_quadrature_over_several_triangles', 'tests', 'tests.test_points_from_barycentric_coordinates', 'tests.test_spline_function_evaluation', 'tests.test_projection_length', 'tests.test_barycentric_coordinates', 'tests.test_signed_area', 'tests.test_numerical_quadrature', 'tests.test_ps12_vertices', 'tests.test_values_vs_polynomial_pieces']","attrs==22.1.0
+contourpy==1.0.5
+cycler==0.11.0
+fonttools==4.37.2
+iniconfig==1.1.1
+kiwisolver==1.4.4
+matplotlib==3.6.0
+mpmath==1.2.1
+numpy==1.23.3
+packaging==21.3
+Pillow==9.2.0
+pluggy==1.0.0
+py==1.11.0
+pyparsing==3.0.9
+pytest==7.1.3
+python-dateutil==2.8.2
+six==1.16.0
+sympy==1.11.1
+tomli==2.0.1
+",ok,"matplotlib
+scipy=1.1.1
+sympy
+numpy
+pytest",ok,47,0,0,3,"['SSplines.constants', 'SSplines.dicts', 'SSplines.helper_functions', 'SSplines.simplex_spline', 'SSplines.spline_function', 'SSplines.spline_space', 'SSplines.symbolic', 'setup']",SSplines.constants SSplines.dicts SSplines.helper_functions SSplines.simplex_spline SSplines.spline_function SSplines.spline_space SSplines.symbolic setup
+flapy-results_20220918_230734/gltflib_20220918_230734__QmXgF,22965,53373016,53396033,22965,thor3,gltflib,https://github.com/lukas-shawford/gltflib,33bb4af035e0a3ede9ece9c84a5a324291582039,,,,1,False,,thor3,32c4cc4008ea,33bb4af035e0a3ede9ece9c84a5a324291582039,Sun Sep 18 23:19:52 UTC 2022,Sun Sep 18 23:20:45 UTC 2022,53.0,"['gltflib.models.scene', 'gltflib.models.material', 'gltflib.models.base_model', 'gltflib.models.animation_sampler', 'gltflib.enums.animation_target_path', 'gltflib.models.named_base_model', 'gltflib.models.sparse', 'gltflib.models.sparse_indices', 'gltflib.models.buffer', 'gltflib.models.primitive', 'gltflib.models.occlusion_texture_info', 'gltflib.models.accessor', 'gltflib.enums.alpha_mode', 'gltflib.enums.primitive_mode', 'gltflib.__version__', 'gltflib.gltf_resource', 'gltflib.models.animation', 'gltflib.models.mesh', 'gltflib.models.perspective_camera_info', 'gltflib.models.sampler', 'gltflib.models.sparse_values', 'gltflib.models.texture', 'gltflib.models.orthographic_camera_info', 'gltflib.models.normal_texture_info', 'gltflib.models.pbr_metallic_roughness', 'gltflib.enums.component_type', 'gltflib.models.texture_info', 'gltflib.gltf', 'gltflib.enums.buffer_target', 'gltflib.models.camera', 'gltflib.models.image', 'gltflib.models.gltf_model', 'gltflib.models.target', 'gltflib.models.skin', 'gltflib.enums.accessor_type', 'gltflib.models.channel', 'gltflib.utils.file_utils', 'gltflib.models.node', 'gltflib.models.buffer_view', 'gltflib.utils.data_utils', 'gltflib.utils.json_utils', 'gltflib.models.attributes', 'gltflib.enums.camera_type', 'gltflib.enums.interpolation', 'gltflib.models.asset']",ok,"['gltflib.__version__', 'gltflib.enums.accessor_type', 'gltflib.enums.alpha_mode', 'gltflib.enums.animation_target_path', 'gltflib.enums.buffer_target', 'gltflib.enums.camera_type', 'gltflib.enums.component_type', 'gltflib.enums.interpolation', 'gltflib.enums.primitive_mode', 'gltflib.gltf', 'gltflib.gltf_resource', 'gltflib.models.accessor', 'gltflib.models.animation', 'gltflib.models.animation_sampler', 'gltflib.models.asset', 'gltflib.models.attributes', 'gltflib.models.base_model', 'gltflib.models.buffer', 'gltflib.models.buffer_view', 'gltflib.models.camera', 'gltflib.models.channel', 'gltflib.models.gltf_model', 'gltflib.models.image', 'gltflib.models.material', 'gltflib.models.mesh', 'gltflib.models.named_base_model', 'gltflib.models.node', 'gltflib.models.normal_texture_info', 'gltflib.models.occlusion_texture_info', 'gltflib.models.orthographic_camera_info', 'gltflib.models.pbr_metallic_roughness', 'gltflib.models.perspective_camera_info', 'gltflib.models.primitive', 'gltflib.models.sampler', 'gltflib.models.scene', 'gltflib.models.skin', 'gltflib.models.sparse', 'gltflib.models.sparse_indices', 'gltflib.models.sparse_values', 'gltflib.models.target', 'gltflib.models.texture', 'gltflib.models.texture_info', 'gltflib.utils.data_utils', 'gltflib.utils.file_utils', 'gltflib.utils.json_utils', 'setup', 'tests.e2e.test_roundtrip', 'tests.unit.test_gltf', 'tests.unit.test_gltf_model', 'tests.util']",ok,"['tests.unit.test_gltf_model', 'tests.e2e.test_roundtrip', 'tests.unit.test_gltf']","['tests.unit.test_gltf_model.TestGLTFModel', 'tests.unit.test_gltf.TestGLTF', 'tests.e2e.test_roundtrip', 'tests.e2e.test_roundtrip.TestRoundtrip', 'tests.unit.test_gltf_model', 'tests.unit.test_gltf']","bleach==3.1.5
+certifi==2020.4.5.1
+cffi==1.15.1
+chardet==3.0.4
+cryptography==2.9.2
+dataclasses-json==0.4.2
+docutils==0.16
+idna==2.9
+importlib-metadata==1.6.0
+jeepney==0.8.0
+keyring==21.2.1
+marshmallow==3.5.2
+marshmallow-enum==1.5.1
+more-itertools==8.2.0
+mypy-extensions==0.4.3
+packaging==21.3
+pkginfo==1.5.0.1
+pycparser==2.20
+Pygments==2.6.1
+pyparsing==3.0.9
+python-magic==0.4.17
+readme-renderer==26.0
+requests==2.23.0
+requests-toolbelt==0.9.1
+SecretStorage==3.1.2
+six==1.14.0
+stringcase==1.2.0
+tqdm==4.46.0
+twine==3.1.1
+typing-extensions==3.7.4.2
+typing-inspect==0.6.0
+urllib3==1.25.9
+webencodings==0.5.1
+zipp==3.1.0
+",ok,"bleach==3.1.5
+certifi==2020.4.5.1
+cffi==1.14.0
+chardet==3.0.4
+cryptography==2.9.2
+dataclasses==0.7; python_version < '3.7'
+dataclasses-json==0.4.2
+docutils==0.16
+idna==2.9
+importlib-metadata==1.6.0
+jeepney==0.4.3
+keyring==21.2.1
+marshmallow==3.5.2
+marshmallow-enum==1.5.1
+more-itertools==8.2.0
+mypy-extensions==0.4.3
+pkginfo==1.5.0.1
+pycparser==2.20
+Pygments==2.6.1
+python-magic==0.4.17
+readme-renderer==26.0
+requests==2.23.0
+requests-toolbelt==0.9.1
+SecretStorage==3.1.2
+six==1.14.0
+stringcase==1.2.0
+tqdm==4.46.0
+twine==3.1.1
+typing-extensions==3.7.4.2
+typing-inspect==0.6.0
+urllib3==1.25.9
+webencodings==0.5.1
+zipp==3.1.0",ok,42,41,0,0,"['gltflib.__version__', 'gltflib.enums.accessor_type', 'gltflib.enums.alpha_mode', 'gltflib.enums.animation_target_path', 'gltflib.enums.buffer_target', 'gltflib.enums.camera_type', 'gltflib.enums.component_type', 'gltflib.enums.interpolation', 'gltflib.enums.primitive_mode', 'gltflib.gltf', 'gltflib.gltf_resource', 'gltflib.models.accessor', 'gltflib.models.animation', 'gltflib.models.animation_sampler', 'gltflib.models.asset', 'gltflib.models.attributes', 'gltflib.models.base_model', 'gltflib.models.buffer', 'gltflib.models.buffer_view', 'gltflib.models.camera', 'gltflib.models.channel', 'gltflib.models.gltf_model', 'gltflib.models.image', 'gltflib.models.material', 'gltflib.models.mesh', 'gltflib.models.named_base_model', 'gltflib.models.node', 'gltflib.models.normal_texture_info', 'gltflib.models.occlusion_texture_info', 'gltflib.models.orthographic_camera_info', 'gltflib.models.pbr_metallic_roughness', 'gltflib.models.perspective_camera_info', 'gltflib.models.primitive', 'gltflib.models.sampler', 'gltflib.models.scene', 'gltflib.models.skin', 'gltflib.models.sparse', 'gltflib.models.sparse_indices', 'gltflib.models.sparse_values', 'gltflib.models.target', 'gltflib.models.texture', 'gltflib.models.texture_info', 'gltflib.utils.data_utils', 'gltflib.utils.file_utils', 'gltflib.utils.json_utils', 'setup', 'tests.util']",gltflib.__version__ gltflib.enums.accessor_type gltflib.enums.alpha_mode gltflib.enums.animation_target_path gltflib.enums.buffer_target gltflib.enums.camera_type gltflib.enums.component_type gltflib.enums.interpolation gltflib.enums.primitive_mode gltflib.gltf gltflib.gltf_resource gltflib.models.accessor gltflib.models.animation gltflib.models.animation_sampler gltflib.models.asset gltflib.models.attributes gltflib.models.base_model gltflib.models.buffer gltflib.models.buffer_view gltflib.models.camera gltflib.models.channel gltflib.models.gltf_model gltflib.models.image gltflib.models.material gltflib.models.mesh gltflib.models.named_base_model gltflib.models.node gltflib.models.normal_texture_info gltflib.models.occlusion_texture_info gltflib.models.orthographic_camera_info gltflib.models.pbr_metallic_roughness gltflib.models.perspective_camera_info gltflib.models.primitive gltflib.models.sampler gltflib.models.scene gltflib.models.skin gltflib.models.sparse gltflib.models.sparse_indices gltflib.models.sparse_values gltflib.models.target gltflib.models.texture gltflib.models.texture_info gltflib.utils.data_utils gltflib.utils.file_utils gltflib.utils.json_utils setup tests.util
+flapy-results_20220918_230734/pytest-freezegun_20220918_230734__mC6BC,19960,53373016,53393028,19960,thor6,pytest-freezegun,https://github.com/ktosiek/pytest-freezegun,3202256486ea405904ded68b8bd61a409b856a75,,,,1,False,,thor6,32c4cc4008ea,3202256486ea405904ded68b8bd61a409b856a75,Sun Sep 18 23:05:46 UTC 2022,Sun Sep 18 23:05:53 UTC 2022,7.0,[],ok,"['pytest_freezegun', 'setup']",ok,['tests.test_freezegun'],"['tests', 'tests.test_freezegun']",,ok,,ok,2,11,0,0,"['pytest_freezegun', 'setup']",pytest_freezegun setup
+flapy-results_20220918_230734/py-vkontakte_20220918_230734__wkwYN,3395,53373016,53376436,3395,thor9,py-vkontakte,https://github.com/sgaynetdinov/py-vkontakte,b03246b8d4b6f5ee5ab7e5c67e09e1f14b85fd9c,,,,1,False,,thor9,32c4cc4008ea,b03246b8d4b6f5ee5ab7e5c67e09e1f14b85fd9c,Sun Sep 18 21:58:06 UTC 2022,Sun Sep 18 21:58:19 UTC 2022,13.0,"['vk.comment', 'vk.attachments', 'vk.photos', 'vk.users', 'vk.base', 'vk.polls', 'vk.fetch', 'vk.error', 'vk.messages', 'vk.api', 'vk.database', 'vk.wall', 'vk.auth', 'vk.friends', 'vk.groups']",ok,"['setup', 'tests.conftest', 'tests.test_fetch', 'tests.test_group', 'tests.test_message', 'tests.test_user', 'tests.test_user_career', 'vk.api', 'vk.attachments', 'vk.auth', 'vk.base', 'vk.comment', 'vk.database', 'vk.error', 'vk.fetch', 'vk.friends', 'vk.groups', 'vk.messages', 'vk.photos', 'vk.polls', 'vk.users', 'vk.wall']",ok,"['tests.test_fetch', 'tests.test_user_career', 'tests.test_user', 'tests.test_message', 'tests.test_group']","['tests.test_fetch', 'tests.test_user_career', 'tests.test_user', 'tests.test_message', 'tests.test_group', 'tests']","astroid==2.12.10
+attrs==22.1.0
+dill==0.3.5.1
+iniconfig==1.1.1
+isort==5.10.1
+lazy-object-proxy==1.7.1
+mccabe==0.7.0
+packaging==21.3
+platformdirs==2.5.2
+pluggy==1.0.0
+py==1.11.0
+pylint==2.15.2
+pyparsing==3.0.9
+pytest==7.1.3
+pytest-mock==3.8.2
+tomli==2.0.1
+tomlkit==0.11.4
+wrapt==1.14.1
+",ok,"pytest
+isort
+pytest-mock
+pylint",ok,68,0,0,0,"['setup', 'tests.conftest', 'vk.api', 'vk.attachments', 'vk.auth', 'vk.base', 'vk.comment', 'vk.database', 'vk.error', 'vk.fetch', 'vk.friends', 'vk.groups', 'vk.messages', 'vk.photos', 'vk.polls', 'vk.users', 'vk.wall']",setup tests.conftest vk.api vk.attachments vk.auth vk.base vk.comment vk.database vk.error vk.fetch vk.friends vk.groups vk.messages vk.photos vk.polls vk.users vk.wall
+flapy-results_20220918_230734/marcalyx_20220918_230734__c3aYo,6703,53373016,53379745,6703,thor2,marcalyx,https://github.com/seanredmond/marcalyx,fef328c1d9060252873b8ce9658f356ffef453ab,,,,1,False,,thor2,32c4cc4008ea,fef328c1d9060252873b8ce9658f356ffef453ab,Sun Sep 18 22:10:58 UTC 2022,Sun Sep 18 22:11:05 UTC 2022,7.0,"['marcalyx.__version__', 'marcalyx.marcalyx']",ok,"['marcalyx.__version__', 'marcalyx.marcalyx', 'setup', 'tests.test_collection', 'tests.test_controlfield', 'tests.test_datafield', 'tests.test_record']",ok,"['tests.test_controlfield', 'tests.test_collection', 'tests.test_datafield', 'tests.test_record']","['tests.test_controlfield', 'tests.test_datafield', 'tests.test_record', 'tests', 'tests.test_collection']",,ok,,ok,39,0,0,0,"['marcalyx.__version__', 'marcalyx.marcalyx', 'setup']",marcalyx.__version__ marcalyx.marcalyx setup
