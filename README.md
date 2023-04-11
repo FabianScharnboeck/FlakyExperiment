@@ -30,6 +30,8 @@ of the projects\
 options for pynguin to use (do not change anything except the pynguin configurations and global configurations, as 
 this XML file only targets those lines. All other tags are legacy and are not used anymore).
 ## Starting the pynguin test generation (SLURM)
+- Please roll out a pynguin / flapy image (podman) before trying to run the scipts!
+
 Now that the pynguin CSVs are generated in `./src/pynguin_csv`-
 we have one CSV for every project and a CSV called `merged.csv` with all projects inside -
 the setup for starting pynguin test generation is complete.
@@ -53,3 +55,58 @@ python3 ./setup_tools/tools.py CreateFlapyCSV load_csv ./src/pynguin_csv/pynguin
 ````bash
 ./run_csv cluster ABSOLUTE_PATH_TO/src/flapy_csv/flapy_test.csv false "" RESULTS_FOLDER
 ````
+
+
+## File structure
+```bash
+# The pynguin and flapy scripts are marked with MAIN, which means users should
+# use this script, IGNORE means those are only helper scripts which can
+# be ignored by users.
+.
+├── README.md
+├── csv
+│   ├── flapy_input_flakyProj_2020.csv # legacy
+│   ├── martin_frozen_requirements.csv # legacy
+│   ├── martin_frozen_requirements_2.csv # legacy
+│   ├── nod_flaky_proj_pivot.csv # legacy
+│   ├── nod_flaky_proj_pivot_test.csv # legacy
+│   ├── owain_parry_projects.csv # legacy
+│   ├── own_searched_projects.csv # legacy
+│   ├── python_top_200.csv # legacy
+│   ├── repos.csv # legacy
+│   └── software_eng_chair_uni_passau.csv # legacy
+├── exp_flakiness.xml # XML File containing Pynguin configurations.
+├── macos_podman_fix.sh
+├── poetry.lock
+├── pyproject.toml
+├── repos_sut_modules.csv # Big CSV
+├── repos_sut_modules_no_setup.csv # Big CSV
+├── repos_test.csv # Example CSV to test the scripts.
+├── run_container.sh # IGNORE flapy run script
+├── run_csv.sh # -- MAIN Run script for FlaPy --
+├── run_line.sh # IGNORE flapy run script
+├── run_pynguin_container.sh # IGNORE pynguin run script
+├── run_pynguin_csv.sh # -- MAIN Run script for Pynguin --
+├── run_pynguin_line.sh # IGNORE pynguin run script
+├── setup_tools
+│   ├── __init__.py
+│   ├── add_frozen_requirements.py # legacy
+│   ├── create_experiment.py # legacy
+│   ├── create_flapy_csv.py # legacy
+│   ├── create_flapy_csv_from_pynguin_csv.py # legacy
+│   ├── create_frozen_requirements.py # legacy
+│   ├── findpackages.py # legacy
+│   ├── ignore_frozen_requirements.py # legacy
+│   ├── merge_csv.py # legacy
+│   ├── merge_repo_csv.py # legacy
+│   ├── tag_matcher.py # legacy
+│   └── tools.py # Use this for creating pynguin & flapy csv files. Need help?: Here is a Python Fire guide: https://google.github.io/python-fire/guide/
+└── src
+    ├── flapy_csv
+    │   └── flapy_test.csv # A generated flapy file
+    ├── pynguin_csv
+    │   └── pynguin_test.csv # A generated pynguin file
+    ├── results # Logs are saved here
+    └── test_package # Requirements files for pynguin are saved here
+
+```
