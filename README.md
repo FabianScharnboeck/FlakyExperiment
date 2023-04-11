@@ -11,12 +11,31 @@ If you meet this conditions, the project structure is complete and you can proce
 Before you begin, make sure you meet the following requirements:
 - `Python 3.8` is installed and you have set up a venv.
 - `pip` is installed
-- `docker` is installed (for using SLURM, Podman should be preferred)
 - `podman` is installed (alternative for docker)
 - `poetry` is installed
 
-## Setting up the data (not required if you want to use already set up repositories_flakiness.csv)
-TODO Verweis auf FlaPy? 
+## Setting up the data (not required if you want to use already set up repos_test.csv)
+- https://github.com/se2p/FlaPy
+
+The creator of the tool FlaPy has a module **"results_parser"**.
+By using FlaPy, you run a project with **1 iteration and 1 rerun**.
+This will lead to a results directory with one folder per project.
+The results_parser can now search for the requirements files and all other important metadata in the resulting directories.
+The result is a CSV file like `repos_test.csv` here in this project.
+
+### Excursus - Using FlaPys results_parser
+It is assumed you are either cd'd into FlaPy by now (https://github.com/se2p/FlaPy) or you invoke FlaPy by other means.
+```bash
+results_parser ResultsDirCollection --path PATH_TO_FLAPY_RESULTS_DIR get_meta_overview add sut_modules _df to_csv > OUTPUT_DIRECTORY_OF_YOUR_CHOICE
+```
+
+- ```ResultsDirCollection``` collects all necessary information out of the directory with the projects, which FlaPy has created.
+- ```--path``` is the path to the previously mentioned results directory
+- ```get_meta_overview``` creates a data frame with necessary information to proceed with the FlakyExperiment project
+- ```add sut_modules _df to_csv``` adds the sut_modules as a column, which are all modules of a project **that do not contain tests**
+
+After creating this repo CSV, you can finally proceed in this project by creating the necessary pynguin CSV and invoking the test generation,
+which is described below.
 
 ## Creating the pynguin CSV's
 Prerequisites: It is assumed you are cd'd in the root folder of this project.
