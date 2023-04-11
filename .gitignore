@@ -2,6 +2,6 @@
 src/test_package/*
 src/results/*
 src/flapy_csv/*.csv
-src/flapy_csv/*.csv
+src/pynguin_csv/*.csv
 .idea
 ./analysis/*
