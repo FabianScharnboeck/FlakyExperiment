@@ -1,6 +1,7 @@
 ../dist
 src/test_package/*
 src/results/*
+src/flapy_csv/*.csv
+src/flapy_csv/*.csv
 .idea
-./src/*
 ./analysis/*
