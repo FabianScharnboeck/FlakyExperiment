@@ -322,7 +322,8 @@ class CreatePynguinCSV:
                                         pynguin_test_dir, run.run_id]
 
             csv_data_dict: Dict[str, str] = dict(zip(header, csv_data_list))
-            df = df.append(csv_data_dict, ignore_index=True)
+            new_run = pd.DataFrame(data=csv_data_dict.values(), index=header).T
+            df = pd.concat([df, new_run], ignore_index=True)
 
             # Write requirements
             if not os.path.exists(package_dir_physical):
