@@ -303,8 +303,12 @@ class CreatePynguinCSV:
         for run in runs:
             base_path = Path(".").absolute()
             project_path = base_path.parent / "projects"
+
+            # The package path gets a random int in case of multiple projects and runs.
             package_path: str = f"src/test_package/{run.project_name}_" + str(round((time.time() * 1000))) + "_" + str(
                 random.randint(1000000, 9999999))
+
+            # pynguin test dir: pynguin_auto_tests_TIME-IN-MS_RANDOM-INT
             pynguin_test_dir: str = "pynguin_auto_tests_" + str(round((time.time() * 1000))) + "_" + str(
                 random.randint(1000000, 9999999))
 
@@ -322,7 +326,8 @@ class CreatePynguinCSV:
                                         pynguin_test_dir, run.run_id]
 
             csv_data_dict: Dict[str, str] = dict(zip(header, csv_data_list))
-            df = df.append(csv_data_dict, ignore_index=True)
+            new_run = pd.DataFrame(data=csv_data_dict.values(), index=header).T
+            df = pd.concat([df, new_run], ignore_index=True)
 
             # Write requirements
             if not os.path.exists(package_dir_physical):
